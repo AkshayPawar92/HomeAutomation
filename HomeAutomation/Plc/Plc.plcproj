@@ -18,9 +18,6 @@
     <LibraryReferences>{8650e46e-6b2f-4859-9e80-3814d1409e98}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Elements\AC.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Elements\Curtain.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -31,9 +28,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elements\Fan.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Elements\Keypad.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GVLs\GVL.TcGVL">
@@ -49,6 +43,9 @@
     <Compile Include="POUs\PRG_House.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\PRG_Testing.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Rooms\Bedroom.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -61,10 +58,10 @@
     <Compile Include="Utility\F_Scaling.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utility\RampDown.TcPOU">
+    <Compile Include="Utility\RampUp.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utility\RampUp.TcPOU">
+    <Compile Include="Utility\RampDown.TcPOU">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

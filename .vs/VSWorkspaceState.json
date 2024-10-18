@@ -1,7 +1,14 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\HomeAutomation",
+    "\\HomeAutomation\\Plc",
+    "\\HomeAutomation\\Plc\\Elements",
+    "\\HomeAutomation\\Plc\\GVLs",
+    "\\HomeAutomation\\Plc\\POUs",
+    "\\HomeAutomation\\Plc\\Rooms",
+    "\\HomeAutomation\\Plc\\Utility"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\HomeAutomation\\Plc\\GVLs\\GVL.TcGVL",
   "PreviewInSolutionExplorer": false
 }

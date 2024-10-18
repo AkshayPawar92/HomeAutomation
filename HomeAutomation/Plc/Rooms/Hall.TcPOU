@@ -7,53 +7,132 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	keypad01 : Keypad;
 	lamp01:	DigitalLight;
 	lamp02:	DigitalLight;
 	lamp03:	DigitalLight;
 	dimmer01 : Dimmer;
-	
+	curtain: Curtain;
+	CurtainMode: INT := 0;
+	fan: Fan;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-	EL1008_01;
-	EL1008_02;
-	EL1008_03;
-	EL2008_01;
-	EL2008_02;
-	EL4004_01;
+//	IO Mapping - IP
+	lamp01.input			:=	EL1008_01[0];			
+	lamp02.input			:=	EL1008_01[1];			
+	lamp03.input			:=	EL1008_01[2];			
+	EL1008_01[3];			
+	EL1008_01[4];
+	EL1008_01[5];
+	EL1008_01[6];
+	EL1008_01[7];
 	
-	lamp01(input:=	EL1008_01[0], keyType:= );
-	EL2008_01[0]	:=	lamp01.output;
-	EL2008_01[1]	:=	lamp01.output;
+	dimmer01.input01		:=	EL1008_02[0];
+	dimmer01.input02		:=	EL1008_02[1];
+	EL1008_02[2];
+	EL1008_02[3];
+	fan.OnOff				:=	EL1008_02[4];
+	fan.speed				:=	EL1008_02[5];
+	EL1008_02[6];
+	EL1008_02[7];
+
+	curtain.openCmd			:=	EL1008_03[0];
+	curtain.closeCmd		:=	EL1008_03[1];
+	curtain.IsOpened		:=	EL1008_03[2];
+	curtain.IsClosed		:=	EL1008_03[3];
+	EL1008_03[4];
+	EL1008_03[5];
+	EL1008_03[6];
+	EL1008_03[7];
+
+//	########################################################################
 	
-	lamp02(input:=	EL1008_01[1], keyType:= );
-	EL2008_01[2]	:=	lamp02.output;
+	lamp01(input:=	, keyType:= 0);	
+	lamp02(input:=	, keyType:= 0);
+	lamp03(input:=	, keyType:= 1);
 	
-	lamp03(input:=	EL1008_01[2], keyType:= );
-	EL2008_01[3]	:=	lamp03.output;
+	dimmer01(input01:= , input02:= );
 	
-	dimmer01(input01:= EL1008_02[0], input02:= EL1008_02[1]);
-	EL4004_01[0]	:= dimmer01.output;
-	
+	curtain(
+		openCmd				:= , 
+		closeCmd			:= , 
+		OpenTime			:= CURTAIN_OPEN_TIME, 
+		CloseTime			:= CURTAIN_CLOSE_TIME, 
+		IsOpened			:= , 
+		IsClosed			:= , 
+		mode				:= CurtainMode, 
+		open_op				=> , 
+		close_op			=> , 
+		openClose_perc		=> );
+
+	fan(OnOff:= , speed:= , output=> );
+
+//	########################################################################
+//	IO Mapping - OP
+	EL2008_01[0]			:=	lamp01.Q;
+	EL2008_01[1]			:=	lamp01.Q;
+	EL2008_01[2]			:=	lamp02.Q;
+	EL2008_01[3]			:=	lamp03.Q;
+	EL2008_01[4];
+	EL2008_01[5];
+	EL2008_01[6];
+	EL2008_01[7];
+
+	EL2008_02[0]			:=	curtain.open_op;
+	EL2008_02[1]			:=	curtain.close_op;
+	EL2008_02[2];
+	EL2008_02[3];
+	EL2008_02[4];
+	EL2008_02[5];
+	EL2008_02[6];
+	EL2008_02[7];
+
+	EL4004_01[0]			:=	dimmer01.output;
+	EL4004_01[1];
+	EL4004_01[2];
+	EL4004_01[3];
+
+	EL4004_02[0]			:=	fan.output;
+	EL4004_02[1];
+	EL4004_02[2];
+	EL4004_02[3];
+
+
+//===================================================
+EL1008_02[5]	:=	FALSE;
+
 	]]></ST>
     </Implementation>
     <LineIds Name="Hall">
-      <LineId Id="10" Count="0" />
-      <LineId Id="16" Count="4" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="129" Count="26" />
       <LineId Id="11" Count="0" />
       <LineId Id="21" Count="0" />
+      <LineId Id="157" Count="0" />
       <LineId Id="12" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="28" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="28" Count="0" />
       <LineId Id="27" Count="0" />
-      <LineId Id="34" Count="1" />
+      <LineId Id="34" Count="0" />
       <LineId Id="37" Count="0" />
+      <LineId Id="53" Count="9" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="100" Count="7" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="108" Count="7" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="116" Count="3" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="120" Count="3" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="159" Count="1" />
       <LineId Id="36" Count="0" />
     </LineIds>
   </POU>

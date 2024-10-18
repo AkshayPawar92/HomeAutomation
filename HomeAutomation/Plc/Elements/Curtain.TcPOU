@@ -3,16 +3,135 @@
   <POU Name="Curtain" Id="{04557dba-7e8c-4135-9722-49b9f4a6c74b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Curtain
 VAR_INPUT
+	openCmd: BOOL;
+	closeCmd: BOOL;
+	OpenTime: TIME;
+	CloseTime: TIME;
+	IsOpened: BOOL;
+	IsClosed: BOOL;
+	mode: INT;	//	0: keep open/close pressed till fully open/close, release to stop moving 
+				//	1: press once, curtain will fully open/close (as per opening time), to stop in between, press any key again
+				//	2: curtain with open/close sensor (press once)
 END_VAR
 VAR_OUTPUT
+	open_op: BOOL;
+	close_op: BOOL;
+	openClose_perc: REAL;
 END_VAR
 VAR
+	rampUp: RampUp;
+	rampDown: RampDown;
+	rtOpenCmd: R_TRIG;
+	rtCloseCmd: R_TRIG;
+	tofOpen: TOF;
+	tofClose: TOF;
+	ftOpenCmd: F_TRIG;
+	ftCloseCmd: F_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[
+	IF mode = 0 THEN
+	
+		open_op		:=	openCmd AND (NOT closeCmd);
+		close_op	:=	closeCmd AND (NOT openCmd);
+	
+//		rampUp(
+//			IN:= (openCmd) AND (NOT closeCmd), 
+//			RampUpTime:= OpenTime, 
+//			Ramp_lowerLimit:= 0, 
+//			Ramp_upperLimit:= 100, 
+//			output:= openClose_perc, 
+//			InProgress=> open_op);
+			
+//		rampDown(
+//			IN:= (NOT openCmd) AND (closeCmd), 
+//			RampDownTime:= CloseTime, 
+//			Ramp_lowerLimit:= 0, 
+//			Ramp_upperLimit:= 100, 
+//			output:= openClose_perc, 
+//			InProgress=> close_op);
+		
+	ELSIF mode = 1 THEN
+		rtOpenCmd(CLK:= openCmd, Q=> );
+		rtCloseCmd(CLK:= closeCmd, Q=> );
+		tofOpen(IN:= rtOpenCmd.Q, PT:= OpenTime, Q=> , ET=> );
+		tofClose(IN:= rtCloseCmd.Q, PT:= CloseTime, Q=> , ET=> );
+		ftOpenCmd(CLK:= tofOpen.Q, Q=> );
+		ftCloseCmd(CLK:= tofClose.Q, Q=> );
+		
+		IF rtOpenCmd.Q THEN
+			open_op		:=	NOT open_op;
+		END_IF
+		IF ftOpenCmd.Q THEN
+			open_op		:=	FALSE;
+		END_IF
+		
+		IF rtCloseCmd.Q THEN
+			close_op	:=	NOT close_op;
+		END_IF
+		IF ftCloseCmd.Q THEN
+			close_op	:=	FALSE;
+		END_IF
+		
+	ELSIF mode = 2 THEN
+		rtOpenCmd(CLK:= openCmd, Q=> );
+		rtCloseCmd(CLK:= closeCmd, Q=> );
+		
+		IF rtOpenCmd.Q AND (NOT IsOpened) THEN
+			open_op		:=	NOT open_op;
+		END_IF
+		IF IsOpened THEN
+			open_op		:=	FALSE;
+		END_IF
+		
+		IF rtCloseCmd.Q AND (NOT IsClosed) THEN
+			close_op	:=	NOT close_op;
+		END_IF
+		IF IsClosed THEN
+			close_op	:=	FALSE;
+		END_IF
+		
+	ELSE
+		open_op			:=	FALSE;
+		close_op		:=	FALSE;
+	END_IF
+	
+	
+	]]></ST>
     </Implementation>
     <LineIds Name="Curtain">
+      <LineId Id="176" Count="0" />
+      <LineId Id="129" Count="1" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="131" Count="14" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="228" Count="1" />
+      <LineId Id="234" Count="1" />
+      <LineId Id="239" Count="1" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="232" Count="1" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="247" Count="1" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="250" Count="5" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="200" Count="2" />
+      <LineId Id="214" Count="3" />
+      <LineId Id="223" Count="1" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="219" Count="1" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="225" Count="2" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="154" Count="2" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>

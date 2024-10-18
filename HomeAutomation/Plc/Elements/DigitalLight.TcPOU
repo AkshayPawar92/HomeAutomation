@@ -7,7 +7,7 @@ VAR_INPUT
 	keyType : INT;		//	0: Tap | 1: Toggle
 END_VAR
 VAR_OUTPUT
-	output : BOOL;
+	Q : BOOL;
 	
 END_VAR
 VAR
@@ -15,29 +15,22 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-IF keyType = 0 THEN
+      <ST><![CDATA[IF keyType = 0 THEN
 	rtOnOff(CLK:= input, Q=> );
 	IF rtOnOff.Q THEN
-		output := NOT output;
+		Q := NOT Q;
 	END_IF
 ELSIF keyType = 1 THEN
-	output		:=	input;
+	Q		:=	input;
 ELSE
-	output		:=	FALSE;
+	Q		:=	FALSE;
 END_IF
 	
 ]]></ST>
     </Implementation>
     <LineIds Name="DigitalLight">
-      <LineId Id="34" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="28" Count="1" />
-      <LineId Id="32" Count="1" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="38" Count="2" />
-      <LineId Id="35" Count="1" />
+      <LineId Id="75" Count="10" />
+      <LineId Id="36" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

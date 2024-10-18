@@ -29,8 +29,8 @@ CASE step OF
 		ELSIF input02 THEN
 			step := 50;	
 		END_IF
-		rampUp(Enable := FALSE);
-		rampDown(Enable := FALSE);
+		rampUp(IN := FALSE, output:= dimmer_perc);
+		rampDown(In := FALSE, output:= dimmer_perc);
 		tonLongPress_01(IN := FALSE);
 		tonLongPress_02(IN := FALSE);
 		
@@ -40,16 +40,17 @@ CASE step OF
 		IF tonLongPress_01.Q THEN
 			step :=	20;
 		ELSIF (NOT input01) THEN
-			dimmer_perc	:=	100;
+			dimmer_perc	:=	32767;
 			step		:=	0;
 		END_IF
 	
 	20: // Long Press - Up
 		rampUp(
-			Setpoint:= 100, 
+			IN:= TRUE, 
 			RampUpTime:= RAMP_UP_TIME, 
-			Enable:= TRUE, 
-			Output=> dimmer_perc, 
+			Ramp_lowerLimit:= 0, 
+			Ramp_upperLimit:= 32767, 
+			output:= dimmer_perc, 
 			InProgress=> );
 			
 		IF (NOT input01) THEN
@@ -68,10 +69,11 @@ CASE step OF
 	
 	60:	//	Long press - Down
 		rampDown(
-			Setpoint:= 0, 
+			IN:= TRUE, 
 			RampDownTime:= RAMP_DOWN_TIME, 
-			Enable:= TRUE, 
-			Output=> dimmer_perc, 
+			Ramp_lowerLimit:= 0, 
+			Ramp_upperLimit:= 32767, 
+			output:= dimmer_perc, 
 			InProgress=> );
 		
 		IF (NOT input02) THEN
@@ -79,15 +81,10 @@ CASE step OF
 		END_IF
 	
 END_CASE
-
-	output	:=	REAL_TO_INT(F_Scaling(
-								Variable_In:= dimmer_perc, 
-								ZeroIn:= 0, 
-								ZeroOut:= 100, 
-								SpanIn:= 0, 
-								SpanOut:= 32767));
-								
-
+	
+	output	:=	REAL_TO_INT(dimmer_perc);
+ 
+				
 ]]></ST>
     </Implementation>
     <LineIds Name="Dimmer">
@@ -106,7 +103,7 @@ END_CASE
       <LineId Id="76" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="46" Count="1" />
-      <LineId Id="78" Count="4" />
+      <LineId Id="126" Count="5" />
       <LineId Id="50" Count="0" />
       <LineId Id="83" Count="1" />
       <LineId Id="86" Count="1" />
@@ -117,7 +114,7 @@ END_CASE
       <LineId Id="71" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="72" Count="0" />
-      <LineId Id="89" Count="4" />
+      <LineId Id="132" Count="5" />
       <LineId Id="74" Count="0" />
       <LineId Id="73" Count="0" />
       <LineId Id="95" Count="1" />
@@ -125,9 +122,8 @@ END_CASE
       <LineId Id="97" Count="0" />
       <LineId Id="30" Count="0" />
       <LineId Id="20" Count="0" />
-      <LineId Id="98" Count="4" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="103" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="139" Count="0" />
       <LineId Id="22" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>

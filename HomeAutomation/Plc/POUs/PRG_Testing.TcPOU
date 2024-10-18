@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_Testing" Id="{5dfc19b9-7574-4287-99ed-954d1b5570d8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Testing
+VAR
+	rampUp: RampUp;
+	rampDown: RampDown;
+	in: BOOL;
+	output: REAL;
+	ton1: TON;
+	ET: TIME;
+	in2: BOOL;
+	output2: REAL;
+	ton2: TON;
+	ET2: TIME;
+	openCmd: BOOL;
+	closeCmd: BOOL;
+	mode: INT;
+	open_op: BOOL;
+	close_op: BOOL;
+	curtain: Curtain;
+	openClose_perc: REAL;
+	IsOpened: BOOL;
+	IsClosed: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+rampUp(
+	IN:= in, 
+	RampUpTime:= T#6S345MS, 
+	Ramp_lowerLimit:= 100, 
+	Ramp_upperLimit:= 700, 
+	output:= output, 
+	InProgress=> );
+	
+	ton1(IN:= rampUp.InProgress, PT:= T#1H, Q=> , ET=> );
+	IF ton1.IN THEN
+		ET	:=	ton1.ET;
+	END_IF
+
+rampDown(
+	IN:= in2, 
+	RampDownTime:= T#6S345MS, 
+	Ramp_lowerLimit:= 100, 
+	Ramp_upperLimit:= 700, 
+	output:= output, 
+	InProgress=> );
+
+	ton2(IN:= rampDown.InProgress, PT:= T#1H, Q=> , ET=> );
+	IF ton2.IN THEN
+		ET2	:=	ton2.ET;
+	END_IF	
+			
+curtain(
+	openCmd:= openCmd, 
+	closeCmd:= closeCmd, 
+	OpenTime:= T#5S, 
+	CloseTime:= T#7S, 
+	IsOpened:= IsOpened, 
+	IsClosed:= IsClosed, 
+	mode:= mode, 
+	open_op=> open_op, 
+	close_op=> close_op,
+	openClose_perc=> openClose_perc);
+	
+	
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Testing">
+      <LineId Id="6" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="27" Count="5" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="37" Count="3" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="77" Count="3" />
+      <LineId Id="72" Count="2" />
+      <LineId Id="81" Count="2" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,71 +1,79 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
-  <POU Name="RampDown" Id="{3d69e20a-ae2c-4842-8b60-d7593648c8f2}" SpecialFunc="None">
+  <POU Name="RampDown" Id="{c888cfeb-eab2-4d89-8b57-5b812dd0339d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK RampDown
 VAR_INPUT
-    Setpoint     : REAL;    // Target value to ramp down to
-    RampDownTime : TIME;    // Time to ramp down to the setpoint
-    Enable       : BOOL;    // Enables the ramping process
+	IN: BOOL;
+	RampDownTime: TIME;
+	Ramp_lowerLimit: REAL;
+	Ramp_upperLimit: REAL;
 END_VAR
-
+VAR_IN_OUT
+	output: REAL;
+END_VAR
 VAR_OUTPUT
-    Output       : REAL;    // Current output value
-    InProgress   : BOOL;    // TRUE while ramping is in progress
+	InProgress: BOOL;	
 END_VAR
-
 VAR
-    StartValue   : REAL;    // Starting value of the ramp
-    RampRate     : REAL;    // Rate of change per second
-    ElapsedTime  : TIME;    // Time passed since the start of the ramp
-    Timer        : TON;     // Timer for tracking elapsed time
+	rampDown: REAL;
+	x: REAL;
+	init: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-// Initialize ramp if enabled
-IF Enable THEN
-    IF NOT InProgress THEN
-        // Start ramping
-        StartValue := Output;
-        Timer(IN := TRUE, PT := RampDownTime); // Start the timer
-        
-        IF RampDownTime > T#0S THEN
-            // Calculate ramp rate
-            RampRate := (StartValue - Setpoint) / TIME_TO_REAL(RampDownTime);
-        ELSE
-            RampRate := StartValue - Setpoint;
-        END_IF
-        
-        InProgress := TRUE;
-    END_IF
+	IF IN THEN
+		IF NOT init THEN
+			init	:=	TRUE;
+			InProgress	:=	TRUE;
+			rampDown	:=	TIME_TO_REAL(RampDownTime);		
+			x		:=	PLC_CYCLE_TIME_ms / rampDown;
+			x		:=	(Ramp_upperLimit - Ramp_lowerLimit) * x;
+		END_IF
+		
+		IF (output > Ramp_lowerLimit) AND (InProgress) THEN
+			output		:=	output - x;
+		ELSE
+			output		:=	Ramp_lowerLimit;
+			InProgress	:=	FALSE;
+		END_IF
+		
+	ELSE
+		InProgress 	:=	FALSE;	
+		init		:=	FALSE;
+	END_IF
 
-    // Update elapsed time from the timer
-    ElapsedTime := Timer.ET; // ET is the elapsed time of the timer
-    
-    // Check if the ramp time has been reached
-    IF Timer.Q THEN
-        Output := Setpoint;  // Set the output to the target value
-        InProgress := FALSE; // Ramp process is complete
-    ELSE
-        // Decrementally update the output
-        Output := StartValue - TIME_TO_REAL(ElapsedTime) * RampRate;
-    END_IF
-ELSE
-    InProgress := FALSE;
-    Timer(IN := FALSE); // Stop the timer if ramping is disabled
-	Output	:=	0;
-END_IF
 
-	Timer();
-	]]></ST>
+
+
+
+
+]]></ST>
     </Implementation>
     <LineIds Name="RampDown">
-      <LineId Id="166" Count="31" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="198" Count="0" />
-      <LineId Id="216" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="28" Count="4" />
       <LineId Id="9" Count="0" />
-      <LineId Id="217" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
