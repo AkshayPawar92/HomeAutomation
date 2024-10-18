@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="DigitalLight" Id="{e7c05c2b-c9cc-4ab1-9c73-c648a673d424}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DigitalLight
+VAR_INPUT
+	input: BOOL;
+	keyType : INT;		//	0: Tap | 1: Toggle
+END_VAR
+VAR_OUTPUT
+	output : BOOL;
+	
+END_VAR
+VAR
+	rtOnOff: R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF keyType = 0 THEN
+	rtOnOff(CLK:= input, Q=> );
+	IF rtOnOff.Q THEN
+		output := NOT output;
+	END_IF
+ELSIF keyType = 1 THEN
+	output		:=	input;
+ELSE
+	output		:=	FALSE;
+END_IF
+	
+]]></ST>
+    </Implementation>
+    <LineIds Name="DigitalLight">
+      <LineId Id="34" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="35" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

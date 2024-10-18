@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_House" Id="{de77fefd-9b7f-419a-b0ed-9b272890e3cb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_House
+VAR
+	hall : Hall;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	hall();
+	
+
+//	IO Mapping:
+//	Hall:
+	EL1008_01;
+	EL1008_02;
+	EL1008_03;
+	EL2008_01;
+	EL2008_02;
+	EL4004_01;
+	
+//	Kitchen
+	EL1008_04;
+	EL2008_03;
+	EL4004_02;
+	
+//	Bedroom1
+	EL1008_05;
+	EL1008_06;
+	EL2008_04;
+	EL4004_03;
+	
+//	Bedroom2
+	EL1008_07;
+	EL1008_08;
+	EL2008_05;
+	EL4004_04;
+	
+	
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_House">
+      <LineId Id="38" Count="2" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="8" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

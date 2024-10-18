@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="RampDown" Id="{3d69e20a-ae2c-4842-8b60-d7593648c8f2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK RampDown
+VAR_INPUT
+    Setpoint     : REAL;    // Target value to ramp down to
+    RampDownTime : TIME;    // Time to ramp down to the setpoint
+    Enable       : BOOL;    // Enables the ramping process
+END_VAR
+
+VAR_OUTPUT
+    Output       : REAL;    // Current output value
+    InProgress   : BOOL;    // TRUE while ramping is in progress
+END_VAR
+
+VAR
+    StartValue   : REAL;    // Starting value of the ramp
+    RampRate     : REAL;    // Rate of change per second
+    ElapsedTime  : TIME;    // Time passed since the start of the ramp
+    Timer        : TON;     // Timer for tracking elapsed time
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Initialize ramp if enabled
+IF Enable THEN
+    IF NOT InProgress THEN
+        // Start ramping
+        StartValue := Output;
+        Timer(IN := TRUE, PT := RampDownTime); // Start the timer
+        
+        IF RampDownTime > T#0S THEN
+            // Calculate ramp rate
+            RampRate := (StartValue - Setpoint) / TIME_TO_REAL(RampDownTime);
+        ELSE
+            RampRate := StartValue - Setpoint;
+        END_IF
+        
+        InProgress := TRUE;
+    END_IF
+
+    // Update elapsed time from the timer
+    ElapsedTime := Timer.ET; // ET is the elapsed time of the timer
+    
+    // Check if the ramp time has been reached
+    IF Timer.Q THEN
+        Output := Setpoint;  // Set the output to the target value
+        InProgress := FALSE; // Ramp process is complete
+    ELSE
+        // Decrementally update the output
+        Output := StartValue - TIME_TO_REAL(ElapsedTime) * RampRate;
+    END_IF
+ELSE
+    InProgress := FALSE;
+    Timer(IN := FALSE); // Stop the timer if ramping is disabled
+	Output	:=	0;
+END_IF
+
+	Timer();
+	]]></ST>
+    </Implementation>
+    <LineIds Name="RampDown">
+      <LineId Id="166" Count="31" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="217" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

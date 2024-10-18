@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="Hall" Id="{4b00a001-43ea-4b70-b88a-a8dcac3d88f3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Hall
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	keypad01 : Keypad;
+	lamp01:	DigitalLight;
+	lamp02:	DigitalLight;
+	lamp03:	DigitalLight;
+	dimmer01 : Dimmer;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	EL1008_01;
+	EL1008_02;
+	EL1008_03;
+	EL2008_01;
+	EL2008_02;
+	EL4004_01;
+	
+	lamp01(input:=	EL1008_01[0], keyType:= );
+	EL2008_01[0]	:=	lamp01.output;
+	EL2008_01[1]	:=	lamp01.output;
+	
+	lamp02(input:=	EL1008_01[1], keyType:= );
+	EL2008_01[2]	:=	lamp02.output;
+	
+	lamp03(input:=	EL1008_01[2], keyType:= );
+	EL2008_01[3]	:=	lamp03.output;
+	
+	dimmer01(input01:= EL1008_02[0], input02:= EL1008_02[1]);
+	EL4004_01[0]	:= dimmer01.output;
+	
+	]]></ST>
+    </Implementation>
+    <LineIds Name="Hall">
+      <LineId Id="10" Count="0" />
+      <LineId Id="16" Count="4" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
