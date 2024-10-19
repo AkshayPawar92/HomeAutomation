@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_Fan" Id="{ca268f2d-f5dc-4b51-9bb9-abdd0f99d80f}">
+    <Declaration><![CDATA[TYPE ST_Fan :
+STRUCT
+	OnOff: BOOL;
+	Speed: INT;		//	0: 0%, 1: 25%, 2: 50%, 3: 75%, 4: 100%
+	Status: INT;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

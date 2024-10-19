@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <GVL Name="GVL_2" Id="{12b36bb8-b433-48fa-b361-a13bc3877dca}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	// Soft inputs (from Application)
+	stDeviceControl: ARRAY [0..MAX_ROOM] OF ST_Room := 
+	[(Name := 'Hall'), (Name := 'Kitchen'), (Name := 'BedRoom1'), (Name := 'BedRoom2')];
+	eRoom : E_Room;
+	
+END_VAR
+VAR_GLOBAL CONSTANT
+	
+	MAX_LAMPS_PER_ROOM: INT := 4;
+	MAX_CURTAIN_PER_ROOM: INT:= 1;
+	MAX_DIMMER_PER_ROOM: INT:= 4;
+	MAX_FAN_PER_ROOM: INT:= 0;
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

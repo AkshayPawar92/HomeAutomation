@@ -19,26 +19,27 @@ END_VAR
     <Implementation>
       <ST><![CDATA[
 //	IO Mapping - IP
-	lamp01.input			:=	EL1008_01[0];			
-	lamp02.input			:=	EL1008_01[1];			
-	lamp03.input			:=	EL1008_01[2];			
+
+	lamp01.input			:=	EL1008_01[0] OR stDeviceControl[E_Room.Hall].DigitalLamp[0].PushButton;			
+	lamp02.input			:=	EL1008_01[1] OR stDeviceControl[E_Room.Hall].DigitalLamp[1].PushButton;			
+	lamp03.input			:=	EL1008_01[2] OR stDeviceControl[E_Room.Hall].DigitalLamp[2].ToggleButton;			
 	EL1008_01[3];			
 	EL1008_01[4];
 	EL1008_01[5];
 	EL1008_01[6];
 	EL1008_01[7];
 	
-	dimmer01.input01		:=	EL1008_02[0];
-	dimmer01.input02		:=	EL1008_02[1];
+	dimmer01.DimUp_ON		:=	EL1008_02[0] OR stDeviceControl[E_Room.Hall].Dimmer[0].DimUp_ON;
+	dimmer01.DimDown_OFF	:=	EL1008_02[1] OR stDeviceControl[E_Room.Hall].Dimmer[0].DimDown_OFF;
 	EL1008_02[2];
 	EL1008_02[3];
-	fan.OnOff				:=	EL1008_02[4];
-	fan.speed				:=	EL1008_02[5];
+	fan.OnOff				:=	EL1008_02[4] OR stDeviceControl[E_Room.Hall].Fan[0].OnOff;
+	fan.speed				:=	EL1008_02[5] (*OR stDeviceControl[E_Room.Hall].Fan[0].Speed*);
 	EL1008_02[6];
 	EL1008_02[7];
 
-	curtain.openCmd			:=	EL1008_03[0];
-	curtain.closeCmd		:=	EL1008_03[1];
+	curtain.openCmd			:=	EL1008_03[0] OR stDeviceControl[E_Room.Hall].Curtain[0].Open;
+	curtain.closeCmd		:=	EL1008_03[1] OR stDeviceControl[E_Room.Hall].Curtain[0].Close;
 	curtain.IsOpened		:=	EL1008_03[2];
 	curtain.IsClosed		:=	EL1008_03[3];
 	EL1008_03[4];
@@ -52,7 +53,7 @@ END_VAR
 	lamp02(input:=	, keyType:= 0);
 	lamp03(input:=	, keyType:= 1);
 	
-	dimmer01(input01:= , input02:= );
+	dimmer01(DimUp_ON:= , DimDown_OFF:= );
 	
 	curtain(
 		openCmd				:= , 
@@ -102,11 +103,35 @@ END_VAR
 //===================================================
 EL1008_02[5]	:=	FALSE;
 
+
+	stDeviceControl[E_Room.Hall].DigitalLamp[0].Status			:=	lamp01.Q;
+	stDeviceControl[E_Room.Hall].DigitalLamp[0].Status			:=	lamp01.Q;
+	stDeviceControl[E_Room.Hall].DigitalLamp[1].Status			:=	lamp02.Q;
+	stDeviceControl[E_Room.Hall].DigitalLamp[2].Status			:=	lamp03.Q;
+
+	stDeviceControl[E_Room.Hall].Curtain[0].Status				:=	0;	//curtain.openClose_perc;
+	
+	stDeviceControl[E_Room.Hall].Dimmer[0].Status				:=	REAL_TO_INT(F_Scaling(dimmer01.output,0, 32767, 0, 100));
+	
+	stDeviceControl[E_Room.Hall].Fan[0].Status					:=	REAL_TO_INT(F_Scaling(fan.output,0, 32767, 0, 100));
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	]]></ST>
     </Implementation>
     <LineIds Name="Hall">
       <LineId Id="156" Count="0" />
-      <LineId Id="129" Count="26" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="130" Count="25" />
       <LineId Id="11" Count="0" />
       <LineId Id="21" Count="0" />
       <LineId Id="157" Count="0" />
@@ -132,7 +157,17 @@ EL1008_02[5]	:=	FALSE;
       <LineId Id="120" Count="3" />
       <LineId Id="71" Count="0" />
       <LineId Id="73" Count="1" />
-      <LineId Id="159" Count="1" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="180" Count="1" />
+      <LineId Id="183" Count="2" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="214" Count="1" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="192" Count="9" />
       <LineId Id="36" Count="0" />
     </LineIds>
   </POU>

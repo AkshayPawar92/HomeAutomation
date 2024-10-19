@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_Curtain" Id="{8e5d4a2d-1c1c-4eb0-8515-dd183d8aa33f}">
+    <Declaration><![CDATA[TYPE ST_Curtain :
+STRUCT
+	Open: BOOL;
+	Close: BOOL;
+	Status: INT;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

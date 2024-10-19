@@ -3,8 +3,8 @@
   <POU Name="Dimmer" Id="{72de836e-7852-4ce8-a2be-acbaaea23600}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Dimmer
 VAR_INPUT
-	input01: BOOL;
-	input02: BOOL;
+	DimUp_ON: BOOL;
+	DimDown_OFF: BOOL;
 END_VAR
 VAR_OUTPUT
 	output: INT;
@@ -20,13 +20,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-	
+      <ST><![CDATA[	
 CASE step OF
 	0:	//	Key pressed
-		IF input01 THEN
+		IF DimUp_ON THEN
 			step := 10;
-		ELSIF input02 THEN
+		ELSIF DimDown_OFF THEN
 			step := 50;	
 		END_IF
 		rampUp(IN := FALSE, output:= dimmer_perc);
@@ -36,10 +35,10 @@ CASE step OF
 		
 		
 	10:	//	Short Press - On
-		tonLongPress_01(IN:= input01, PT:= T_LONG_PRESS, Q=> , ET=> );
+		tonLongPress_01(IN:= DimUp_ON, PT:= T_LONG_PRESS, Q=> , ET=> );
 		IF tonLongPress_01.Q THEN
 			step :=	20;
-		ELSIF (NOT input01) THEN
+		ELSIF (NOT DimUp_ON) THEN
 			dimmer_perc	:=	32767;
 			step		:=	0;
 		END_IF
@@ -53,16 +52,16 @@ CASE step OF
 			output:= dimmer_perc, 
 			InProgress=> );
 			
-		IF (NOT input01) THEN
+		IF (NOT DimUp_ON) THEN
 			step	:=	0;
 		END_IF
 	
 
 	50:	//	Short press - Off
-		tonLongPress_02(IN:= input02, PT:= T_LONG_PRESS, Q=> , ET=> );
+		tonLongPress_02(IN:= DimDown_OFF, PT:= T_LONG_PRESS, Q=> , ET=> );
 		IF tonLongPress_02.Q THEN
 			step :=	60;
-		ELSIF (NOT input02) THEN
+		ELSIF (NOT DimDown_OFF) THEN
 			dimmer_perc	:=	0;
 			step		:=	0;
 		END_IF
@@ -76,7 +75,7 @@ CASE step OF
 			output:= dimmer_perc, 
 			InProgress=> );
 		
-		IF (NOT input02) THEN
+		IF (NOT DimDown_OFF) THEN
 			step	:=	0;
 		END_IF
 	
@@ -88,43 +87,7 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="Dimmer">
-      <LineId Id="17" Count="2" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="59" Count="1" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="104" Count="4" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="56" Count="1" />
-      <LineId Id="62" Count="1" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="46" Count="1" />
-      <LineId Id="126" Count="5" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="83" Count="1" />
-      <LineId Id="86" Count="1" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="51" Count="1" />
-      <LineId Id="66" Count="4" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="132" Count="5" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="95" Count="1" />
-      <LineId Id="94" Count="0" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="139" Count="0" />
-      <LineId Id="22" Count="0" />
+      <LineId Id="255" Count="63" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>

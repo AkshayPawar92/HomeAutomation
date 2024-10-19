@@ -16,7 +16,7 @@ END_VAR
 VAR_OUTPUT
 	open_op: BOOL;
 	close_op: BOOL;
-	openClose_perc: REAL;
+	openClose_perc: INT;
 END_VAR
 VAR
 	rampUp: RampUp;

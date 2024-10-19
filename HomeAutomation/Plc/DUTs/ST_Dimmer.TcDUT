@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_Dimmer" Id="{e54d771d-b39d-4bef-9b10-5bf7b24a3416}">
+    <Declaration><![CDATA[TYPE ST_Dimmer :
+STRUCT
+	DimUp_ON: BOOL;
+	DimDown_OFF: BOOL;
+	SetBrightness: INT;
+	Status: INT;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
