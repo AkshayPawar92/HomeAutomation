@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <Itf Name="I_DigitalDevice" Id="{4a11739c-1d2e-45a3-a2a6-6e78d1359a52}">
+    <Declaration><![CDATA[INTERFACE I_DigitalDevice
+]]></Declaration>
+    <Property Name="Status" Id="{82a3de33-9be7-4a8f-b679-35965004fe6d}">
+      <Declaration><![CDATA[PROPERTY Status : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d33ca098-408b-410c-b5f4-792e1083753a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="TurnOff" Id="{5bb013f0-ed6d-41d1-9fba-7f09152db9fc}">
+      <Declaration><![CDATA[METHOD TurnOff
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="TurnOn" Id="{3560de7f-2901-4258-afd5-54c6c04ce658}">
+      <Declaration><![CDATA[METHOD TurnOn
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

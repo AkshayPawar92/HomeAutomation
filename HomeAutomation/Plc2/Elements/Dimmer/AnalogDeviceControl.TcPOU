@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="AnalogDeviceControl" Id="{509163be-7531-4ad2-9809-d4a5da088bb0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK AnalogDeviceControl EXTENDS AnalogDevice
+VAR
+	On_Inc AT%I* : BOOL;
+	Off_Dec AT%I* : BOOL;
+	
+	App_OnOff: BOOL;
+	App_Inc: BOOL;
+	App_Dec: BOOL;
+	App_SetValue: INT;
+
+	step: INT;
+	tonLongPress_01: TON;
+	tonLongPress_02: TON;
+	_T_LONG_PRESS: TIME;
+	_RampUpTime: TIME;
+	_RampDownTime: TIME;
+	rtOn_Inc: R_TRIG;
+	rtOff_Inc: R_TRIG;
+	rtApp_Inc: R_TRIG;
+	rtApp_Dec: R_TRIG;
+	rtApp_OnOff: R_TRIG;
+	App_SetValue_prev: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	SUPER^();
+	
+	rtOn_Inc(CLK:= On_Inc, Q=> );
+	rtOff_Inc(CLK:= Off_Dec, Q=> );
+	rtApp_OnOff(CLK:= App_OnOff, Q=> );
+	rtApp_Inc(CLK:= App_Inc, Q=> );
+	rtApp_Dec(CLK:= App_Dec, Q=> );
+
+	CASE step OF
+	0:	//	Key pressed
+		IF rtOn_Inc.Q THEN
+			step := 10;
+		ELSIF rtOff_Inc.Q THEN
+			step := 50;
+		ELSIF rtApp_OnOff.Q THEN
+			step	:=	70;	
+		ELSIF rtApp_Inc.Q THEN
+			step	:=	80;
+		ELSIF rtApp_Dec.Q THEN
+			step	:=	90;
+		ELSIF (App_SetValue_prev <> App_SetValue) THEN
+			step	:=	100;
+		END_IF
+		tonLongPress_01(IN := FALSE);
+		tonLongPress_02(IN := FALSE);
+		IncreaseValue(FALSE, _RampUpTime);
+		DecreaseValue(FALSE, _RampDownTime);
+		App_SetValue_prev	:=	App_SetValue;		
+		
+	10:	//	Short Press - On
+		tonLongPress_01(IN:= On_Inc, PT:= _T_LONG_PRESS, Q=> , ET=> );
+		IF tonLongPress_01.Q THEN
+			step :=	20;
+		ELSIF (NOT On_Inc) THEN
+			SetValue(value:= REAL_TO_INT(_zeroOut));
+			step		:=	0;
+		END_IF
+		App_SetValue		:=	App_SetValue_prev;
+		
+	20: // Long Press - Up
+		IncreaseValue(TRUE, _RampUpTime);		
+			
+		IF (NOT On_Inc) THEN
+			step	:=	0;
+		END_IF
+		App_SetValue		:=	App_SetValue_prev;
+		
+	50:	//	Short press - Off
+		tonLongPress_02(IN:= Off_Dec, PT:= _T_LONG_PRESS, Q=> , ET=> );
+		IF tonLongPress_02.Q THEN
+			step :=	60;
+		ELSIF (NOT Off_Dec) THEN
+			SetValue(value:= REAL_TO_INT(_zeroIn));
+			step		:=	0;
+		END_IF
+		App_SetValue		:=	App_SetValue_prev;
+		
+	60:	//	Long press - Down
+		DecreaseValue(TRUE, _RampDownTime);
+		
+		IF (NOT Off_Dec) THEN
+			step	:=	0;
+		END_IF
+		App_SetValue		:=	App_SetValue_prev;
+		
+	70:
+		IF Status <> _zeroIn THEN
+			Off();
+		ELSE
+			On();	
+		END_IF
+		step	:=	0;
+		App_SetValue		:=	App_SetValue_prev;
+		
+	80:
+		IncreaseValue(TRUE, _RampUpTime);		
+			
+		IF (NOT App_Inc) THEN
+			step	:=	0;
+		END_IF
+		App_SetValue		:=	App_SetValue_prev;
+		
+	90:
+		DecreaseValue(TRUE, _RampDownTime);
+		
+		IF (NOT App_Dec) THEN
+			step	:=	0;
+		END_IF
+		App_SetValue		:=	App_SetValue_prev;
+		
+	100:
+		SetValue(value:= App_SetValue);
+		App_SetValue		:=	App_SetValue_prev;
+		step				:=	0;
+	END_CASE	
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{0f27e3b2-ac85-4954-9382-d580a3116f71}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+
+	ZeroIn		: REAL;
+	ZeroOut    : REAL;
+	SpanIn     : REAL;
+	SpanOut    : REAL;	
+	PLC_CYCLE_TIME_ms: REAL;
+	
+	T_LONG_PRESS: TIME;
+	RampUpTime: TIME;
+	RampDownTime: TIME;
+
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	//SUPER^.FB_Init(bInitRetains, bInCopyCode, ZeroIn, ZeroOut, SpanIn, SpanOut, PLC_CYCLE_TIME_ms);
+	
+	_T_LONG_PRESS	:=	T_LONG_PRESS;
+	_RampUpTime		:=	RampUpTime;
+	_RampDownTime	:=	RampDownTime;
+	
+	
+	
+	]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="AnalogDeviceControl">
+      <LineId Id="235" Count="2" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="117" Count="5" />
+      <LineId Id="209" Count="1" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="191" Count="1" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="221" Count="1" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="130" Count="6" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="150" Count="1" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="154" Count="6" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="172" Count="3" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="207" Count="1" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="216" Count="1" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="197" Count="3" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="202" Count="3" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="223" Count="1" />
+      <LineId Id="233" Count="1" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="104" Count="7" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="AnalogDeviceControl.FB_init">
+      <LineId Id="22" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="31" Count="3" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

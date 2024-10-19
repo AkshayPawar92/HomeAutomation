@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="OnOffDevice" Id="{35b57e29-fc05-43f7-9e56-cc829be85280}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK OnOffDevice IMPLEMENTS I_DigitalDevice
+VAR
+	Q AT%Q* : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Property Name="Status" Id="{6c52272f-94bf-4a1d-838f-365d773da574}">
+      <Declaration><![CDATA[PROPERTY Status : BOOL]]></Declaration>
+      <Get Name="Get" Id="{5030d7d7-00d0-4cb9-b97d-fa41290f95ac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+	Status	:=	Q;
+	]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="TurnOff" Id="{3a2a1b56-7964-4e35-b443-b51324af685f}">
+      <Declaration><![CDATA[METHOD TurnOff
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	Q	:=	FALSE;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TurnOn" Id="{6aab5918-cecd-4e5a-a891-ecb09c028d24}">
+      <Declaration><![CDATA[METHOD TurnOn
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	Q	:=	TRUE;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="OnOffDevice">
+      <LineId Id="10" Count="9" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="OnOffDevice.Status.Get">
+      <LineId Id="5" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="OnOffDevice.TurnOff">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="OnOffDevice.TurnOn">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

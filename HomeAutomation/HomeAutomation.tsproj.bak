@@ -26,6 +26,9 @@
 				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
+				<Task Id="4" Priority="21" CycleTime="100000" AmsPort="351" AdtTasks="true">
+					<Name>PlcTask1</Name>
+				</Task>
 			</Tasks>
 		</System>
 		<Plc>
@@ -123,6 +126,102 @@
 					</TaskPouOids>
 				</Instance>
 			</Project>
+			<Project GUID="{E10949BF-8681-4C4C-A252-49F0BBBB1CEA}" Name="Plc2" PrjFilePath="Plc2\Plc2.plcproj" TmcFilePath="Plc2\Plc2.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Plc2\Plc2.tmc" TmcHash="{632702A8-90D3-0DCA-26D5-3A07C4D46E73}">
+					<Name>Plc2 Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>PRG_Home.Lamp01.IN</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.Lamp02.IN</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.digitalLamp_Wrapper.IN</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.digitalLamp_Wrapper2.IN</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.digitalLampWithPushButton_1.IN</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.digitalLampWithPushButton.IN</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.analogDeviceControl.On_Inc</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.analogDeviceControl.Off_Dec</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>PRG_Home.Lamp01.digitalLamp.Q</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.Lamp02.digitalLamp.Q</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.digitalLamp_Wrapper.digitalLamp.Q</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.digitalLamp_Wrapper2.digitalLamp.Q</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.digitalLampWithPushButton_1.Q</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.digitalLampWithPushButton.digitalLamp.Q</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.analogDevice.Q</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.analogDeviceControl.Q</Name>
+							<Type>INT</Type>
+						</Var>
+					</Vars>
+					<Contexts>
+						<Context>
+							<Id>0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010040</OTCID>
+							</ManualConfig>
+							<Priority>21</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="21" OTCID="#x08502041"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
 		</Plc>
+		<SymbolWatch>
+			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Outputs^PRG_Home.Lamp01.digitalLamp.Q</Variable>
+			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Outputs^PRG_Home.Lamp02.digitalLamp.Q</Variable>
+			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Inputs^PRG_Home.Lamp01.IN</Variable>
+			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Inputs^PRG_Home.Lamp02.IN</Variable>
+		</SymbolWatch>
 	</Project>
 </TcSmProject>

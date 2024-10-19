@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <Itf Name="I_AnalogDevice" Id="{3b280a32-1736-47f7-9b12-9653c140bc8d}">
+    <Declaration><![CDATA[INTERFACE I_AnalogDevice
+]]></Declaration>
+    <Method Name="DecreaseValue" Id="{92d4a34e-4108-4a1f-9551-3ec626585b3c}">
+      <Declaration><![CDATA[METHOD DecreaseValue
+VAR_INPUT
+	EN			: BOOL;
+	RampDownTime: TIME;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="IncreaseValue" Id="{102d36c9-a438-4d76-9d8d-9bca5e153de3}">
+      <Declaration><![CDATA[METHOD IncreaseValue
+VAR_INPUT
+	EN			: BOOL;
+	RampUpTime: TIME;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Off" Id="{65cfbd52-ef27-4116-9453-428d3495210c}">
+      <Declaration><![CDATA[METHOD Off
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="On" Id="{d9fe0263-418c-484d-b819-882374e87e52}">
+      <Declaration><![CDATA[METHOD On
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SetValue" Id="{1b80db7a-2544-4d8c-8ccf-35ca35be79de}">
+      <Declaration><![CDATA[METHOD SetValue
+VAR_INPUT
+	value: INT;
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Status" Id="{e2a95b2b-7954-4206-81d7-a53978a4455a}">
+      <Declaration><![CDATA[PROPERTY Status : INT]]></Declaration>
+      <Get Name="Get" Id="{2b1086e4-4f9d-4580-a652-4995eed017f2}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

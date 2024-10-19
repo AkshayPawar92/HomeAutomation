@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="OnOffDeviceControl" Id="{2dde5df7-a714-4069-814d-cd69d8282e6a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK OnOffDeviceControl
+VAR
+	IN AT%I* : BOOL;
+	App_IN: BOOL;
+	digitalLamp : OnOffDevice;	
+	rtIN: R_TRIG;
+	rtApp_IN: R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	rtIN(CLK:= IN, Q=> );
+	rtApp_IN(CLK:= App_IN, Q=> );
+	
+	IF rtIN.Q THEN
+		IF digitalLamp.Status = TRUE THEN
+			digitalLamp.TurnOff();
+		ELSE
+			digitalLamp.TurnOn();
+		END_IF
+	END_IF
+
+	IF rtApp_IN.Q THEN
+		IF digitalLamp.Status = TRUE THEN
+			digitalLamp.TurnOff();
+		ELSE
+			digitalLamp.TurnOn();
+		END_IF
+	END_IF	
+
+
+]]></ST>
+    </Implementation>
+    <Property Name="Status" Id="{edcbe291-2848-408d-b98f-780e6bbb7735}">
+      <Declaration><![CDATA[PROPERTY Status : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{90a97657-631f-43c5-b91a-c03f5e73de69}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Status	:=	digitalLamp.Status;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="OnOffDeviceControl">
+      <LineId Id="88" Count="0" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="65" Count="6" />
+      <LineId Id="74" Count="9" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="OnOffDeviceControl.Status.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

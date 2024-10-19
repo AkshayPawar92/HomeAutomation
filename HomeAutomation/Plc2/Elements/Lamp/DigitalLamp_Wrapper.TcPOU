@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="DigitalLamp_Wrapper" Id="{9b465ac5-45dd-4a22-82e9-cdd35cca90b9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DigitalLamp_Wrapper
+VAR
+	IN AT%I* : BOOL;
+	digitalLamp: OnOffDevice;
+	_keyType: INT;		//	0: Tap/push button 1: Toggle/latch Button
+
+	rtIN: R_TRIG;
+	_app_TurnOn: BOOL;
+	rt_app_TurnOn: R_TRIG;
+	_app_TurnOff: BOOL;
+	rt_app_TurnOff: R_TRIG;
+	_app_TurnOnOff: BOOL;
+	rt_app_TurnOnOff: R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	IF _keyType = 0 THEN
+		rtIN(CLK:= IN, Q=> );
+		rt_app_TurnOnOff(CLK:= _app_TurnOnOff, Q=> );
+		
+		IF rtIN.Q OR rt_app_TurnOnOff.Q THEN
+			IF digitalLamp.Status = TRUE THEN
+				digitalLamp.TurnOff();
+			ELSE
+				digitalLamp.TurnOn();	
+			END_IF
+		END_IF
+		
+		rt_app_TurnOn(CLK:= _app_TurnOn, Q=> );
+		IF rt_app_TurnOn.Q THEN
+			digitalLamp.TurnOn();
+		END_IF
+		rt_app_TurnOff(CLK:= _app_TurnOff, Q=> );
+		IF rt_app_TurnOff.Q THEN
+			digitalLamp.TurnOff();
+		END_IF
+		
+	ELSIF _keyType = 1 THEN
+		IF IN THEN
+			digitalLamp.TurnOn();
+		ELSE
+			digitalLamp.TurnOff();
+		END_IF
+	ELSE
+		digitalLamp.TurnOff();
+	END_IF
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Property Name="App_TurnOff" Id="{86f9c277-8ea9-45a8-b666-ff0d965a146e}">
+      <Declaration><![CDATA[PROPERTY App_TurnOff : BOOL]]></Declaration>
+      <Set Name="Set" Id="{ef32cad1-c09b-4c54-85a2-dbfccbf7451c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+	_app_TurnOff :=	App_TurnOff;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="App_TurnOn" Id="{9a6b7db1-5d7f-4298-bc93-ad225917b945}">
+      <Declaration><![CDATA[PROPERTY App_TurnOn : BOOL]]></Declaration>
+      <Set Name="Set" Id="{270ee00b-43f4-4529-a384-5e848f0cc532}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+	_app_TurnOn :=	App_TurnOn;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="App_TurnOnOff" Id="{3d78efad-7f45-4c12-8b1e-d24b3ea327f2}">
+      <Declaration><![CDATA[PROPERTY App_TurnOnOff : BOOL]]></Declaration>
+      <Set Name="Set" Id="{d916475e-8ca2-4f45-b157-a6aa24f17578}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+	_app_TurnOnOff	:=	App_TurnOnOff;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="KeyType" Id="{c5c90473-d7f9-4101-9598-80d9d7aaa278}">
+      <Declaration><![CDATA[PROPERTY KeyType : INT]]></Declaration>
+      <Set Name="Set" Id="{95b50d8f-c9c0-41bd-8726-7977c5dab50c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+	_keyType	:=	KeyType;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="DigitalLamp_Wrapper">
+      <LineId Id="11" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="51" Count="3" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="15" Count="3" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="DigitalLamp_Wrapper.App_TurnOff.Set">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="DigitalLamp_Wrapper.App_TurnOn.Set">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="DigitalLamp_Wrapper.App_TurnOnOff.Set">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="DigitalLamp_Wrapper.KeyType.Set">
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

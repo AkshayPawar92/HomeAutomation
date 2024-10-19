@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="AnalogDeviceControl_1" Id="{76cf8afd-97f7-44dc-983a-e45cbea9eaf8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK AnalogDeviceControl_1
+VAR
+	On_Inc AT%I* : BOOL;
+	Off_Dec AT%I* : BOOL;
+	
+	_zeroIn		: REAL;
+	_zeroOut    : REAL;
+	_spanIn     : REAL;
+	_spanOut    : REAL;
+	_PLC_CYCLE_TIME_ms	: REAL;
+	
+	analogDevice: AnalogDevice(_zeroIn, _zeroOut, _spanIn, _spanOut, _PLC_CYCLE_TIME_ms);
+	App_OnOff: BOOL;
+	App_Inc: BOOL;
+	App_Dec: BOOL;
+	App_SetValue: INT;
+	
+
+	
+	step: INT;	
+	tonLongPress_01: TON;
+	tonLongPress_02: TON;
+	step: INT;
+	dimmer_perc: REAL;
+	rampUp: RampUp;
+	rampDown: RampDown;	
+	_T_LONG_PRESS: TIME;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	
+	CASE step OF
+	0:	//	Key pressed
+		IF On_Inc THEN
+			step := 10;
+		ELSIF Off_Dec THEN
+			step := 50;	
+		END_IF
+		rampUp(IN := FALSE, output:= dimmer_perc);
+		rampDown(In := FALSE, output:= dimmer_perc);
+		tonLongPress_01(IN := FALSE);
+		tonLongPress_02(IN := FALSE);
+
+	10:	//	Short Press - On
+		tonLongPress_01(IN:= On_Inc, PT:= _T_LONG_PRESS, Q=> , ET=> );
+		IF tonLongPress_01.Q THEN
+			step :=	20;
+		ELSIF (NOT On_Inc) THEN
+			dimmer_perc	:=	32767;
+			step		:=	0;
+		END_IF		
+		
+	20: // Long Press - Up
+	
+		analogDevice.IncreaseValue(EN:= , RampUpTime:= );
+			
+		IF (NOT On_Inc) THEN
+			step	:=	0;
+		END_IF		
+		
+	END_CASE
+	
+	
+	
+	
+]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{7acf7153-45e1-4bfb-ab88-b4f0d897ac2a}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	T_LONG_PRESS: TIME;
+	ZeroIn		: REAL;
+	ZeroOut    : REAL;
+	SpanIn     : REAL;
+	SpanOut    : REAL;	
+	PLC_CYCLE_TIME_ms: REAL;
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	_zeroIn		:=	ZeroIn;
+	_zeroOut    :=	ZeroOut;
+	_spanIn     :=	SpanIn;
+	_spanOut    :=	SpanOut;
+	_PLC_CYCLE_TIME_ms	:=	PLC_CYCLE_TIME_ms;
+
+	_T_LONG_PRESS	:=	T_LONG_PRESS;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Status" Id="{3398ae69-d1f9-4ea5-917b-7b43d474b11a}">
+      <Declaration><![CDATA[PROPERTY Status : INT
+]]></Declaration>
+      <Get Name="Get" Id="{ddd54f9e-ed8e-4496-b7b4-3608668a1ca9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Status	:=	analogDevice.Status;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="AnalogDeviceControl_1">
+      <LineId Id="20" Count="1" />
+      <LineId Id="42" Count="17" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="95" Count="2" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="22" Count="3" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="AnalogDeviceControl_1.FB_init">
+      <LineId Id="17" Count="5" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="AnalogDeviceControl_1.Status.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

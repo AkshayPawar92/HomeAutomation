@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_Home" Id="{dbe25c38-c0d1-4648-b8ed-0008a8f3eaf6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Home
+VAR
+	Lamp01	: OnOffDeviceControl;
+	Lamp02	: OnOffDeviceControl;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	Lamp01();
+	Lamp02();
+	
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Home">
+      <LineId Id="6" Count="2" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="9" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

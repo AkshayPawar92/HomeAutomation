@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_Testing" Id="{b6fffdb7-2a36-4774-ac1d-63cbacf3b383}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Testing
+VAR
+	digitalLamp_Wrapper: DigitalLamp_Wrapper;
+	digitalLamp_Wrapper2: DigitalLamp_Wrapper;
+	
+	digitalLampWithPushButton_1: DigitalLampWithPushButton_1;
+	digitalLampWithPushButton: OnOffDeviceControl;
+	
+	analogDevice: AnalogDevice(0, 100, 0, 32767, 10);
+	analogStatus: INT;
+	setAnalogValue: INT;
+	bSetValue: BOOL;
+	bInc: BOOL;
+	bDec: BOOL;
+	bOn: BOOL;
+	bOff: BOOL;
+	analogDeviceControl: AnalogDeviceControl(ZeroIn:= 0, ZeroOut:= 100, SpanIn:= 0, SpanOut:= 32767, PLC_CYCLE_TIME_ms:= 10, T_LONG_PRESS:= T#2S, RampUpTime:= T#5S, RampDownTime:= T#5S); 
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	digitalLamp_Wrapper.KeyType		:=	0;
+	digitalLamp_Wrapper2.KeyType	:=	1;
+
+	digitalLamp_Wrapper();
+	digitalLamp_Wrapper2();
+	
+	digitalLampWithPushButton_1();
+
+	digitalLampWithPushButton();
+	
+
+//	analogDevice();
+//	analogStatus	:=	analogDevice.Status;
+//	IF bSetValue THEN
+//		analogDevice.SetValue(value	:=	setAnalogValue);
+//		bSetValue	:=	FALSE;
+//	END_IF
+	
+//	IF bInc THEN
+//		analogDevice.IncreaseValue(EN:= TRUE, RampUpTime	:=	T#5S);
+//	ELSE
+//		analogDevice.IncreaseValue(EN:= FALSE, RampUpTime	:=	T#5S);
+//	END_IF
+	
+//	IF bDec THEN
+//		analogDevice.DecreaseValue(EN:= TRUE, RampDownTime	:=	T#5S);
+//	ELSE
+//		analogDevice.DecreaseValue(EN:= FALSE, RampDownTime	:=	T#5S);
+//	END_IF
+	
+//	IF bOn THEN
+//		analogDevice.On();
+//	END_IF
+	
+//	IF bOff THEN
+//		analogDevice.Off();
+//	END_IF
+	
+	analogDeviceControl();
+	analogStatus	:=	analogDeviceControl.Status;
+		
+	
+		]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Testing">
+      <LineId Id="14" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="76" Count="2" />
+      <LineId Id="82" Count="2" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="100" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

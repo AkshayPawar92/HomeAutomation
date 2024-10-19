@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="AnalogDevice" Id="{c442d9c8-5ee8-45ea-97d0-22124fe9e706}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK AnalogDevice IMPLEMENTS I_AnalogDevice
+VAR
+	Q AT%Q* : INT;
+	rampUp		: RampUp;
+	rampDown	: RampDown;
+	_value		: REAL;
+	_zeroIn		: REAL;
+	_zeroOut    : REAL;
+	_spanIn     : REAL;
+	_spanOut    : REAL;
+	_PLC_CYCLE_TIME_ms	: REAL;
+	
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	Q	:=	REAL_TO_INT(_value);
+
+]]></ST>
+    </Implementation>
+    <Method Name="DecreaseValue" Id="{4eba8c94-9dee-44a6-b5e8-6c8b6064f301}">
+      <Declaration><![CDATA[METHOD DecreaseValue
+VAR_INPUT
+	EN			: BOOL;
+	RampDownTime: TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	rampDown(
+		IN					:= EN, 
+		RampDownTime		:= RampDownTime, 
+		Ramp_lowerLimit		:= _spanIn, 
+		Ramp_upperLimit		:= _spanOut, 
+		PLC_CYCLE_TIME_ms	:= _PLC_CYCLE_TIME_ms,
+		output				:= _value, 
+		InProgress			=> );
+		
+	
+		
+		
+		]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{003a752a-4da4-4287-915a-505988ac7ecd}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	ZeroIn		: REAL;
+	ZeroOut    : REAL;
+	SpanIn     : REAL;
+	SpanOut    : REAL;	
+	PLC_CYCLE_TIME_ms: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	_zeroIn		:=	ZeroIn;
+	_zeroOut    :=	ZeroOut;
+	_spanIn     :=	SpanIn;
+	_spanOut    :=	SpanOut;
+	_PLC_CYCLE_TIME_ms	:=	PLC_CYCLE_TIME_ms;
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IncreaseValue" Id="{15112a7c-fc96-40df-bbb2-8e365244a14c}">
+      <Declaration><![CDATA[METHOD IncreaseValue
+VAR_INPUT
+	EN			: BOOL;
+	RampUpTime	: TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	rampUp(
+		IN					:= EN, 
+		RampUpTime			:= RampUpTime, 
+		Ramp_lowerLimit		:= _spanIn, 
+		Ramp_upperLimit		:= _spanOut, 
+		PLC_CYCLE_TIME_ms	:= _PLC_CYCLE_TIME_ms,
+		output				:= _value, 
+		InProgress			=> );
+		
+	
+		
+		
+		]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Off" Id="{68953da3-564c-4239-86ef-d3e3f467eb62}">
+      <Declaration><![CDATA[METHOD Off
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	_value	:=	_spanIn;
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="On" Id="{d5657f3d-1fd6-452f-8236-c5c5b23cfe75}">
+      <Declaration><![CDATA[METHOD On
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	_value	:=	_spanOut;
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetValue" Id="{77141b45-bcea-4283-a002-3c6c1008b971}">
+      <Declaration><![CDATA[METHOD SetValue
+VAR_INPUT
+	value: INT;
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	_value	:=	F_Scaling(Variable_In:= value, ZeroIn:= _zeroIn, ZeroOut:= _zeroOut, SpanIn:= _spanIn, SpanOut:= _spanOut);
+
+	
+
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Status" Id="{9cc97bdd-d5b5-4fa6-9e4b-03986a7d7beb}">
+      <Declaration><![CDATA[PROPERTY Status : INT]]></Declaration>
+      <Get Name="Get" Id="{8e2f5ec1-13d9-4de3-8af7-1c1ea09ebd69}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+	Status	:=	REAL_TO_INT(F_Scaling(Variable_In:= _value, ZeroIn:= _spanIn, ZeroOut:= _spanOut, SpanIn:= _zeroIn, SpanOut:= _zeroOut));
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="AnalogDevice">
+      <LineId Id="15" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="AnalogDevice.DecreaseValue">
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="4" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="14" Count="2" />
+    </LineIds>
+    <LineIds Name="AnalogDevice.FB_init">
+      <LineId Id="13" Count="0" />
+      <LineId Id="22" Count="3" />
+      <LineId Id="14" Count="7" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="AnalogDevice.IncreaseValue">
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="4" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="14" Count="2" />
+    </LineIds>
+    <LineIds Name="AnalogDevice.Off">
+      <LineId Id="9" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="AnalogDevice.On">
+      <LineId Id="9" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="AnalogDevice.SetValue">
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="AnalogDevice.Status.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

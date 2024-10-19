@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="RampDown" Id="{0cc193c6-3e00-4562-a9a9-f327daf82b5e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK RampDown
+VAR_INPUT
+	IN: BOOL;
+	RampDownTime: TIME;
+	Ramp_lowerLimit: REAL;
+	Ramp_upperLimit: REAL;
+	PLC_CYCLE_TIME_ms: REAL;
+END_VAR
+VAR_IN_OUT
+	output: REAL;
+END_VAR
+VAR_OUTPUT
+	InProgress: BOOL;	
+END_VAR
+VAR
+	rampDown: REAL;
+	x: REAL;
+	init: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	IF IN AND (RampDownTime > T#0S) AND (PLC_CYCLE_TIME_ms > 0) THEN
+		IF NOT init THEN
+			init	:=	TRUE;
+			InProgress	:=	TRUE;
+			rampDown	:=	TIME_TO_REAL(RampDownTime);		
+			x		:=	PLC_CYCLE_TIME_ms / rampDown;
+			x		:=	(Ramp_upperLimit - Ramp_lowerLimit) * x;
+		END_IF
+		
+		IF (output > Ramp_lowerLimit) AND (InProgress) THEN
+			output		:=	output - x;
+		ELSE
+			output		:=	Ramp_lowerLimit;
+			InProgress	:=	FALSE;
+		END_IF
+		
+	ELSE
+		InProgress 	:=	FALSE;	
+		init		:=	FALSE;
+	END_IF
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="RampDown">
+      <LineId Id="33" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="28" Count="4" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

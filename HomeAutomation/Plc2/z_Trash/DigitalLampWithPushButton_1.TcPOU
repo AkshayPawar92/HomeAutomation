@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="DigitalLampWithPushButton_1" Id="{ef09533f-2613-4a79-8bb5-783bb9f92126}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK DigitalLampWithPushButton_1 EXTENDS OnOffDevice
+VAR
+	IN AT%I* : BOOL;
+	
+	rtIN: R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	rtIN(CLK:= IN, Q=> );
+
+	IF rtIN.Q THEN
+		IF Status = TRUE THEN
+			TurnOff();
+		ELSE
+			TurnOn();
+		END_IF
+	END_IF
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="DigitalLampWithPushButton_1">
+      <LineId Id="10" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="13" Count="2" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
