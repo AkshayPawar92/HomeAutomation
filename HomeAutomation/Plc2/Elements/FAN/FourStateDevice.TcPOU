@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="FourStateDevice" Id="{dea95f42-3b0e-4d09-a4bd-8a6267653bee}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FourStateDevice IMPLEMENTS I_FourStateDevice
+VAR
+	Q	AT%Q* : INT;
+	_Status_prev	: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Off" Id="{b53edbde-d947-4e5f-b20f-0163f5cd9741}">
+      <Declaration><![CDATA[METHOD Off
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	Q	:=	REAL_TO_INT(F_Scaling(Variable_In:= 0, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= 32767));
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="On" Id="{aed5dade-2e33-450a-a330-304a67825435}">
+      <Declaration><![CDATA[METHOD On
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	Q	:=	REAL_TO_INT(F_Scaling(Variable_In:= MAX(25, _Status_prev), Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= 32767));
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="State_1" Id="{71392418-54dd-4aa0-bfc0-19a715638b51}">
+      <Declaration><![CDATA[METHOD State_1
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	Q	:=	REAL_TO_INT(F_Scaling(Variable_In:= 25, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= 32767));
+	_Status_prev	:=	25;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="State_2" Id="{1faa0ff8-4586-4c03-acba-9e4b130277b7}">
+      <Declaration><![CDATA[METHOD State_2
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	Q	:=	REAL_TO_INT(F_Scaling(Variable_In:= 50, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= 32767));
+	_Status_prev	:=	50;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="State_3" Id="{f00d21a5-063e-4727-b8d6-f9141ff82a71}">
+      <Declaration><![CDATA[METHOD State_3
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	Q	:=	REAL_TO_INT(F_Scaling(Variable_In:= 75, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= 32767));
+	_Status_prev	:=	75;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="State_4" Id="{6118053d-9f8c-4874-8954-f8ac10f91b6d}">
+      <Declaration><![CDATA[METHOD State_4
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	Q	:=	REAL_TO_INT(F_Scaling(Variable_In:= 100, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= 32767));
+	_Status_prev	:=	100;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Status" Id="{5c938d1c-3a3a-48e0-9fe3-bab3ee0db1ba}">
+      <Declaration><![CDATA[PROPERTY Status : INT
+]]></Declaration>
+      <Get Name="Get" Id="{17820d24-4d57-4131-9511-72385e032fd5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+	Status	:=	REAL_TO_INT(F_Scaling(Variable_In:= Q, Input_min:= 0, Input_max:= 32767, Output_min:= 0, Output_max:= 100));
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="FourStateDevice">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FourStateDevice.Off">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FourStateDevice.On">
+      <LineId Id="5" Count="2" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FourStateDevice.State_1">
+      <LineId Id="5" Count="1" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FourStateDevice.State_2">
+      <LineId Id="5" Count="1" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FourStateDevice.State_3">
+      <LineId Id="5" Count="1" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FourStateDevice.State_4">
+      <LineId Id="5" Count="1" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FourStateDevice.Status.Get">
+      <LineId Id="5" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

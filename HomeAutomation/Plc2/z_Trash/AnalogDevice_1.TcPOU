@@ -132,7 +132,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-	_value	:=	F_Scaling(Variable_In:= value, ZeroIn:= _zeroIn, ZeroOut:= _zeroOut, SpanIn:= _spanIn, SpanOut:= _spanOut);
+	_value	:=	F_Scaling(Variable_In:= value, Input_min:= _zeroIn, Input_max:= _zeroOut, Output_min:= _spanIn, Output_max:= _spanOut);
 
 	
 
@@ -147,7 +147,7 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[
-	Status	:=	REAL_TO_INT(F_Scaling(Variable_In:= _value, ZeroIn:= _spanIn, ZeroOut:= _spanOut, SpanIn:= _zeroIn, SpanOut:= _zeroOut));
+	Status	:=	REAL_TO_INT(F_Scaling(Variable_In:= _value, Input_min:= _spanIn, Input_max:= _spanOut, Output_min:= _zeroIn, Output_max:= _zeroOut));
 ]]></ST>
         </Implementation>
       </Get>

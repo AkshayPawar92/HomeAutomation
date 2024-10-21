@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="CurtainControl" Id="{4b2829aa-3204-4a26-9487-5be3e74830bb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CurtainControl EXTENDS Curtain
+VAR
+	OpenCmd AT%I* : BOOL;
+	CloseCmd AT%I* : BOOL;
+	
+	App_OpenCmd: BOOL;
+	App_CloseCmd: BOOL;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	IF (OpenCmd OR App_OpenCmd) AND ((NOT CloseCmd) OR (NOT App_CloseCmd)) THEN
+		Open(IN	:=	TRUE);
+	ELSE
+		Open(IN	:=	FALSE);
+	END_IF
+
+	IF (CloseCmd OR App_CloseCmd) AND ((NOT OpenCmd) OR (NOT App_OpenCmd)) THEN
+		Close(IN	:=	TRUE);
+	ELSE
+		Close(IN	:=	FALSE);
+	END_IF
+
+	IF (OpenCmd AND CloseCmd) OR (App_OpenCmd AND App_CloseCmd) THEN
+		Open(IN	:=	FALSE);
+		Close(IN	:=	FALSE);
+	END_IF
+	
+	
+	
+	]]></ST>
+    </Implementation>
+    <LineIds Name="CurtainControl">
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="26" Count="5" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

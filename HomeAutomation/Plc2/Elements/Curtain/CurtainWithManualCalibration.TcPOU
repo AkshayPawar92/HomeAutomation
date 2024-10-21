@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="CurtainWithManualCalibration" Id="{22d318d0-de5a-4982-a3b7-82e051cc1f0c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CurtainWithManualCalibration EXTENDS Curtain
+VAR
+	_status: REAL;
+	_chooseAutoCalibrationAfterReset: BOOL;
+	_CalibrationDone: BOOL;
+	_OpeningTime: TIME;
+	_ClosingTime: TIME;	
+	
+
+	tonCalibrationTime: TON;
+	tonPowerOnDelay: TON;
+	tonClosingTime: TON;
+	rtIN_close: BOOL;
+	statusTrackerTime: TIME;
+	rtIN_open: BOOL;
+	tonOpeningTime: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	tonPowerOnDelay(IN:= TRUE, PT:= T#2S, Q=> , ET=> );
+	IF tonPowerOnDelay.Q THEN
+		Calibration();	
+	END_IF
+	
+]]></ST>
+    </Implementation>
+    <Method Name="Calibration" Id="{dd687136-f24a-476e-8d6a-d1142a6260f6}">
+      <Declaration><![CDATA[METHOD PRIVATE Calibration : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	IF NOT _CalibrationDone THEN
+		
+		IF _chooseAutoCalibrationAfterReset THEN
+			Open_op					:=	TRUE;
+		END_IF
+		
+		tonCalibrationTime(IN:= Open_op, PT:= _openingTime, Q=> , ET=> );
+		IF tonCalibrationTime.Q THEN
+			_status				:=	100;
+			_CalibrationDone	:=	TRUE;
+			tonCalibrationTime(IN:= FALSE, PT:= _openingTime, Q=> , ET=> );
+			Open_op					:=	FALSE;		
+		END_IF
+	END_IF
+
+	Calibration	:=	_CalibrationDone;
+	
+
+	
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Close" Id="{f933aa17-6818-40c6-92cb-5dd03b1e6148}">
+      <Declaration><![CDATA[METHOD Close : BOOL
+VAR_INPUT
+	IN: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	IF NOT Open_op THEN
+		Close_op	:=	IN;
+		
+		IF _CalibrationDone AND (_ClosingTime > T#0S AND _OpeningTime > T#0S) THEN
+			IF _status > 0 THEN
+				IF NOT rtIN_close THEN
+					rtIN_close			:=	TRUE;		
+					statusTrackerTime	:=	REAL_TO_TIME(F_Scaling(Variable_In:= _status, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= TIME_TO_REAL(_ClosingTime)));			
+				END_IF		
+				tonClosingTime(IN:= TRUE, PT:= _ClosingTime, Q=> , ET=> );
+				IF statusTrackerTime >= tonClosingTime.ET THEN
+					_status	:=	LIMIT( 0, (F_Scaling(Variable_In:= TIME_TO_REAL(statusTrackerTime - tonClosingTime.ET), Input_min:= 0, Input_max:= TIME_TO_REAL(_closingTime), Output_min:= 0, Output_max:= 100)) , 100);					
+				ELSE
+					_status			:=	0;
+				END_IF					
+			ELSE //_status = 0 THEN
+				Close_op	:=	FALSE;
+				tonClosingTime(IN:= FALSE);
+			END_IF
+		END_IF	
+	ELSE
+		Close_op	:=	FALSE;	
+	END_IF
+		
+	IF NOT IN THEN
+		rtIN_close	:=	FALSE;
+		tonClosingTime(IN:= FALSE);
+	END_IF
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="ClosingTime" Id="{34bd5ccb-d925-4693-b757-766716331247}">
+      <Declaration><![CDATA[PROPERTY ClosingTime : TIME]]></Declaration>
+      <Set Name="Set" Id="{a8bde76c-3dae-4e16-99f7-5ab5818b0798}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_closingTime	:=	ClosingTime;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_init" Id="{15bda7af-e41b-44dd-b887-514d0cb4efb2}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	ChooseAutoCalibrationAfterReset: BOOL;
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	_chooseAutoCalibrationAfterReset	:=	ChooseAutoCalibrationAfterReset;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open" Id="{b4c4cb45-5207-4c71-b9c9-bf067f934c16}">
+      <Declaration><![CDATA[METHOD Open : BOOL
+VAR_INPUT
+	IN: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	IF NOT Close_op THEN
+		Open_op	:=	IN;
+		
+		IF _CalibrationDone AND (_ClosingTime > T#0S AND _OpeningTime > T#0S) THEN
+			IF _status < 100 THEN
+				IF NOT rtIN_open THEN
+					rtIN_open			:=	TRUE;		
+					statusTrackerTime	:=	REAL_TO_TIME(F_Scaling(Variable_In:= _status, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= TIME_TO_REAL(_OpeningTime)));			
+				END_IF		
+				tonOpeningTime(IN:= TRUE, PT:= _OpeningTime, Q=> , ET=> );
+				IF (tonOpeningTime.ET <= _OpeningTime) THEN
+					_status	:=	LIMIT( 0, (F_Scaling(Variable_In:= TIME_TO_REAL(statusTrackerTime + tonOpeningTime.ET), Input_min:= 0, Input_max:= TIME_TO_REAL(_closingTime), Output_min:= 0, Output_max:= 100)) , 100);
+				ELSE
+					_status		:=	100;
+				END_IF					
+			ELSE //_status = 100 THEN
+				Open_op		:=	FALSE;
+				tonOpeningTime(IN:= FALSE);
+			END_IF
+		END_IF	
+	ELSE
+		Open_op		:=	FALSE;	
+	END_IF
+		
+	IF NOT IN THEN
+		rtIN_open	:=	FALSE;
+		tonOpeningTime(IN:= FALSE);
+	END_IF
+
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="OpeningTime" Id="{c68c9d4e-2ad6-4a31-bc32-a58f719f38e4}">
+      <Declaration><![CDATA[PROPERTY OpeningTime : TIME]]></Declaration>
+      <Set Name="Set" Id="{d3a8e293-14ad-4a4a-a69a-9e0b809118d5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[	_openingTime	:=	OpeningTime;
+	]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Status" Id="{7341478f-dc1a-4087-b92b-11bc13d04212}">
+      <Declaration><![CDATA[PROPERTY Status : INT]]></Declaration>
+      <Get Name="Get" Id="{e137562b-6547-4e05-b8b9-5ed35eee9283}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+IF _CalibrationDone THEN
+	Status	:=	REAL_TO_INT(_status);
+ELSE
+	Status	:=	0;
+END_IF
+	
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="CurtainWithManualCalibration">
+      <LineId Id="72" Count="0" />
+      <LineId Id="78" Count="4" />
+      <LineId Id="32" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithManualCalibration.Calibration">
+      <LineId Id="13" Count="1" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="6" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithManualCalibration.Close">
+      <LineId Id="10" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="13" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithManualCalibration.ClosingTime.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithManualCalibration.FB_init">
+      <LineId Id="10" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithManualCalibration.Open">
+      <LineId Id="17" Count="3" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="21" Count="6" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="29" Count="4" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="34" Count="9" />
+      <LineId Id="9" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithManualCalibration.OpeningTime.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithManualCalibration.Status.Get">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

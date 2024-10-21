@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="FourStateDeviceControl" Id="{260d3c92-a109-450c-a1a7-539ddcb9daba}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FourStateDeviceControl EXTENDS FourStateDevice
+VAR
+	OnOffCmd AT%I* : BOOL;
+	
+	App_OnOff: BOOL;
+	App_FanSpeed: INT;
+	
+	rtOnOffCmd: R_TRIG;
+	rtApp_OnOff: R_TRIG;
+	FanSpeed_prev: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	rtOnOffCmd(CLK:= OnOffCmd, Q=> );
+	rtApp_OnOff(CLK:= App_OnOff, Q=> );
+
+	IF rtOnOffCmd.Q OR rtApp_OnOff.Q THEN
+		IF Status <> 0 THEN
+			Off();
+		ELSE		
+			On();	
+		END_IF
+	END_IF
+
+	CASE App_FanSpeed OF
+		
+		0: 	FanSpeed_prev	:=	App_FanSpeed;
+		
+		1: 	
+			IF (FanSpeed_prev <> App_FanSpeed) THEN
+				FanSpeed_prev	:=	App_FanSpeed;
+				State_1();
+			END_IF			
+			
+		2: 	
+			IF (FanSpeed_prev <> App_FanSpeed) THEN
+				FanSpeed_prev	:=	App_FanSpeed;
+				State_2();
+			END_IF			
+			
+		3: 	
+			IF (FanSpeed_prev <> App_FanSpeed) THEN
+				FanSpeed_prev	:=	App_FanSpeed;
+				State_3();
+			END_IF			
+			
+		4: 	
+			IF (FanSpeed_prev <> App_FanSpeed) THEN
+				FanSpeed_prev	:=	App_FanSpeed;
+				State_4();
+			END_IF			
+			
+	END_CASE
+
+                   
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FourStateDeviceControl">
+      <LineId Id="20" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="63" Count="17" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="13" Count="4" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

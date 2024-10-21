@@ -127,7 +127,7 @@
 				</Instance>
 			</Project>
 			<Project GUID="{E10949BF-8681-4C4C-A252-49F0BBBB1CEA}" Name="Plc2" PrjFilePath="Plc2\Plc2.plcproj" TmcFilePath="Plc2\Plc2.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Plc2\Plc2.tmc" TmcHash="{632702A8-90D3-0DCA-26D5-3A07C4D46E73}">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Plc2\Plc2.tmc" TmcHash="{0E19EC67-C9C4-8618-422A-AC3C83DC13E3}">
 					<Name>Plc2 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -138,6 +138,26 @@
 						</Var>
 						<Var>
 							<Name>PRG_Home.Lamp02.IN</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.dimmer.On_Inc</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.dimmer.Off_Dec</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.fan.OnOffCmd</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtain_basic.OpenCmd</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtain_basic.CloseCmd</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -164,6 +184,38 @@
 							<Name>PRG_Testing.analogDeviceControl.Off_Dec</Name>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>PRG_Testing.curtainWithSensor.OpenSensor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.curtainWithSensor.CloseSensor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtainWithSensor.OpenSensor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtainWithSensor.CloseSensor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtainWithSensor.OpenPushButton</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtainWithSensor.ClosePushButton</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.CurtainWithManualCalibration.OpenPushButton</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.CurtainWithManualCalibration.ClosePushButton</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
@@ -173,6 +225,22 @@
 						</Var>
 						<Var>
 							<Name>PRG_Home.Lamp02.digitalLamp.Q</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.dimmer.Q</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.fan.Q</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtain_basic.Open_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtain_basic.Close_op</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -199,6 +267,50 @@
 							<Name>PRG_Testing.analogDeviceControl.Q</Name>
 							<Type>INT</Type>
 						</Var>
+						<Var>
+							<Name>PRG_Testing.fan.Q</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.curtain.Open_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.curtain.Close_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.curtainWithSensor.Open_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.curtainWithSensor.Close_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.curtainWithManualCalibration.Open_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Testing.curtainWithManualCalibration.Close_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtainWithSensor.Close_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.curtainWithSensor.Open_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.CurtainWithManualCalibration.Open_op</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Home.CurtainWithManualCalibration.Close_op</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Contexts>
 						<Context>
@@ -218,10 +330,10 @@
 			</Project>
 		</Plc>
 		<SymbolWatch>
-			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Outputs^PRG_Home.Lamp01.digitalLamp.Q</Variable>
-			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Outputs^PRG_Home.Lamp02.digitalLamp.Q</Variable>
-			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Inputs^PRG_Home.Lamp01.IN</Variable>
-			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Inputs^PRG_Home.Lamp02.IN</Variable>
+			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Outputs^PRG_Testing.curtainWithManualCalibration.Close_op</Variable>
+			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Outputs^PRG_Testing.curtainWithSensor.Open_op</Variable>
+			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Outputs^PRG_Testing.curtainWithSensor.Close_op</Variable>
+			<Variable>TIPC^Plc2^Plc2 Instance^PlcTask Outputs^PRG_Testing.curtainWithManualCalibration.Open_op</Variable>
 		</SymbolWatch>
 	</Project>
 </TcSmProject>

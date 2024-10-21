@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <Itf Name="I_FourStateDevice" Id="{8d4d81c2-0104-4c46-9a2d-913dc4a57210}">
+    <Declaration><![CDATA[INTERFACE I_FourStateDevice
+]]></Declaration>
+    <Method Name="Off" Id="{18457cd9-8db7-400e-ae3d-73e768dc029a}">
+      <Declaration><![CDATA[METHOD Off
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="On" Id="{8d8d8e76-9862-4573-a2a8-e120dc926f9c}">
+      <Declaration><![CDATA[METHOD On
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="State_1" Id="{1397b85e-5982-4a76-b821-afba878c6f2c}">
+      <Declaration><![CDATA[METHOD State_1
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="State_2" Id="{9385268f-4882-4ab2-bd91-812ae810fee3}">
+      <Declaration><![CDATA[METHOD State_2
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="State_3" Id="{2bfbb433-0a97-4640-b740-1ce42e5f1890}">
+      <Declaration><![CDATA[METHOD State_3
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="State_4" Id="{9adb5188-1389-4291-9c34-0c4365c839c2}">
+      <Declaration><![CDATA[METHOD State_4
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Status" Id="{e1c08cd5-1904-4910-8f25-b0cc92be0cd4}">
+      <Declaration><![CDATA[PROPERTY Status : INT]]></Declaration>
+      <Get Name="Get" Id="{8df65787-5010-4baa-a176-26f47f000ad1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

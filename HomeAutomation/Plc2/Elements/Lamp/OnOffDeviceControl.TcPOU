@@ -4,16 +4,15 @@
     <Declaration><![CDATA[FUNCTION_BLOCK OnOffDeviceControl
 VAR
 	IN AT%I* : BOOL;
-	App_IN: BOOL;
+	App_OnOff: BOOL;
 	digitalLamp : OnOffDevice;	
 	rtIN: R_TRIG;
 	rtApp_IN: R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-	rtIN(CLK:= IN, Q=> );
-	rtApp_IN(CLK:= App_IN, Q=> );
+      <ST><![CDATA[	rtIN(CLK:= IN, Q=> );
+	rtApp_IN(CLK:= App_OnOff, Q=> );
 	
 	IF rtIN.Q THEN
 		IF digitalLamp.Status = TRUE THEN
@@ -48,11 +47,7 @@ END_VAR
       </Get>
     </Property>
     <LineIds Name="OnOffDeviceControl">
-      <LineId Id="88" Count="0" />
-      <LineId Id="63" Count="1" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="65" Count="6" />
-      <LineId Id="74" Count="9" />
+      <LineId Id="105" Count="19" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="OnOffDeviceControl.Status.Get">

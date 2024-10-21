@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="CurtainWithManualCalibrationControl" Id="{853b311b-c221-4db0-aeae-99cf16efb1c2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CurtainWithManualCalibrationControl EXTENDS CurtainWithManualCalibration
+VAR
+	OpenPushButton AT%I* : BOOL;
+	ClosePushButton AT%I* : BOOL;
+
+	App_OpenPushButton: BOOL;
+	App_ClosePushButton: BOOL;
+	
+	rtOpenPB: R_TRIG;
+	rtClosePB: R_TRIG;	
+	M_OpenCmd: BOOL;
+	M_CloseCmd: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	rtOpenPB(CLK:= (OpenPushButton OR App_OpenPushButton) AND ((NOT ClosePushButton) OR (NOT App_ClosePushButton)), Q=> );
+	rtClosePB(CLK:= (ClosePushButton OR App_ClosePushButton) AND ((NOT OpenPushButton) OR (App_OpenPushButton)), Q=> );
+
+	IF rtOpenPB.Q THEN
+		M_OpenCmd	:=	NOT M_OpenCmd;
+		IF M_OpenCmd THEN
+			Open(IN := TRUE);
+		ELSE
+			Open(IN := FALSE);	
+		END_IF
+	END_IF
+	IF Status = 100 THEN
+		Open(IN := FALSE);
+	END_IF
+	
+	IF rtClosePB.Q THEN
+		M_CloseCmd	:=	NOT M_CloseCmd;
+		IF M_CloseCmd THEN
+			Close(IN := TRUE);
+		ELSE
+			Close(IN := FALSE);	
+		END_IF			
+	END_IF
+	IF Status = 0 THEN
+		Close(IN := FALSE);
+	END_IF
+	
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="CurtainWithManualCalibrationControl">
+      <LineId Id="25" Count="0" />
+      <LineId Id="64" Count="1" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="31" Count="5" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="38" Count="8" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

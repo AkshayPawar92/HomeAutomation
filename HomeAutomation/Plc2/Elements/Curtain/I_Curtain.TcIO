@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <Itf Name="I_Curtain" Id="{afa632ab-a7d5-40fd-a66c-55f2d42c27f7}">
+    <Declaration><![CDATA[INTERFACE I_Curtain
+]]></Declaration>
+    <Method Name="Close" Id="{d0e0b6fe-adef-401c-a4f7-6f6a16aa06bf}">
+      <Declaration><![CDATA[METHOD Close : BOOL
+VAR_INPUT
+	IN: BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Open" Id="{ea343dad-57ad-46dd-b91f-59c666ee1946}">
+      <Declaration><![CDATA[METHOD Open : BOOL
+VAR_INPUT
+	IN: BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

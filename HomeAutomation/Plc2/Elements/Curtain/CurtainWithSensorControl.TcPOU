@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="CurtainWithSensorControl" Id="{59abe720-13a4-4568-8f05-277fb011888b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CurtainWithSensorControl EXTENDS CurtainWithSensor
+VAR
+	OpenPushButton AT%I* : BOOL;
+	ClosePushButton AT%I* : BOOL;
+		
+	App_OpenPushButton: BOOL;
+	App_ClosePushButton: BOOL;
+	
+	rtOpenPB: R_TRIG;
+	rtClosePB: R_TRIG;
+	M_OpenCmd: BOOL;
+	M_CloseCmd: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	rtOpenPB(CLK:= (OpenPushButton OR App_OpenPushButton) AND ((NOT ClosePushButton) OR (NOT App_ClosePushButton)), Q=> );
+	rtClosePB(CLK:= (ClosePushButton OR App_ClosePushButton) AND ((NOT OpenPushButton) OR (App_OpenPushButton)), Q=> );
+
+	IF rtOpenPB.Q THEN
+		M_OpenCmd	:=	NOT M_OpenCmd;
+		IF M_OpenCmd THEN
+			Open(IN := TRUE);
+		ELSE
+			Open(IN := FALSE);	
+		END_IF
+	END_IF
+	IF OpenSensor THEN
+		Open(IN := FALSE);
+	END_IF
+	
+	IF rtClosePB.Q THEN
+		M_CloseCmd	:=	NOT M_CloseCmd;
+		IF M_CloseCmd THEN
+			Close(IN := TRUE);
+		ELSE
+			Close(IN := FALSE);	
+		END_IF			
+	END_IF
+	IF CloseSensor THEN
+		Close(IN := FALSE);
+	END_IF
+	
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="CurtainWithSensorControl">
+      <LineId Id="22" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="39" Count="21" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="18" Count="3" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

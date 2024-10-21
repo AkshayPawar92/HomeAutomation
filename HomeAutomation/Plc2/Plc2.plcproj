@@ -18,6 +18,27 @@
     <LibraryReferences>{cacb8db6-18ab-44be-8e12-82a83b5d600b}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Elements\Curtain\Curtain.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\Curtain\CurtainControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\Curtain\CurtainWithManualCalibration.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\Curtain\CurtainWithManualCalibrationControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\Curtain\CurtainWithSensor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\Curtain\CurtainWithSensorControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\Curtain\I_Curtain.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Elements\Dimmer\AnalogDevice.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -25,6 +46,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elements\Dimmer\I_AnalogDevice.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\FAN\FourStateDevice.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\FAN\FourStateDeviceControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\FAN\I_FourStateDevice.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Elements\Lamp\DigitalLamp_Wrapper.TcPOU">
@@ -175,6 +205,8 @@
     <Folder Include="Elements" />
     <Folder Include="Elements\Lamp" />
     <Folder Include="Elements\Dimmer" />
+    <Folder Include="Elements\FAN" />
+    <Folder Include="Elements\Curtain" />
     <Folder Include="z_Trash" />
     <Folder Include="VISUs" />
     <Folder Include="PRGs" />

@@ -6,6 +6,13 @@ VAR
 	Lamp01	: OnOffDeviceControl;
 	Lamp02	: OnOffDeviceControl;
 	
+	dimmer	: AnalogDeviceControl(ZeroIn:= 0, ZeroOut:= 100, SpanIn:= 0, SpanOut:= 32767, PLC_CYCLE_TIME_ms:= 10, T_LONG_PRESS:= T#2S, RampUpTime:= T#5S, RampDownTime:= T#5S);
+	
+	fan 	: FourStateDeviceControl;
+	
+	curtain_basic: CurtainControl;
+	curtainWithSensor: CurtainWithSensorControl;
+	CurtainWithManualCalibration: CurtainWithManualCalibrationControl(TRUE);
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -13,17 +20,25 @@ END_VAR
 	Lamp01();
 	Lamp02();
 	
+	dimmer();
 
+	fan();
 
-
-
-
+	curtain_basic();
+	curtainWithSensor();
+	CurtainWithManualCalibration();
+	
 ]]></ST>
     </Implementation>
     <LineIds Name="PRG_Home">
       <LineId Id="6" Count="2" />
       <LineId Id="17" Count="0" />
-      <LineId Id="9" Count="4" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="51" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

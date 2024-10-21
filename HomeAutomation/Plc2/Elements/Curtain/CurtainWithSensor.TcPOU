@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="CurtainWithSensor" Id="{966f90ac-e61b-44c1-9f86-ea4c94f38c65}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CurtainWithSensor EXTENDS Curtain
+VAR
+	OpenSensor	AT%I* : BOOL;
+	CloseSensor	AT%I* : BOOL;
+
+	_OpeningTime: TIME;
+	_ClosingTime: TIME;
+	_status: REAL;
+
+	M_CalibrationAttempt_open: BOOL;
+	M_CalibrationAttempt_close: BOOL;
+	tonOpenTimeMeasurement: TON;
+	tonCloseTimeMeasurement: TON;
+	tonStatusTracker_open: TON;
+	tonStatusTracker_close: TON;
+	statusTrackerTime: TIME;
+	rtIN_open: BOOL;
+	rtIN_close: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Method Name="Close" Id="{1ea6e25f-e983-4dbe-ba01-81447cc68a62}">
+      <Declaration><![CDATA[METHOD Close : BOOL
+VAR_INPUT
+	IN: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+//	Status - Travel time Calibration (Close Time)
+IF OpenSensor AND IN THEN
+	M_CalibrationAttempt_close	:=	TRUE;
+	tonCloseTimeMeasurement(IN:= FALSE, PT:= T#1D, Q=> , ET=> );
+END_IF
+IF M_CalibrationAttempt_close AND (NOT OpenSensor) THEN
+	toncloseTimeMeasurement(IN:= TRUE, PT:= T#1D, Q=> , ET=> );
+END_IF
+
+
+IF NOT Open_op THEN
+	Close_op	:=	IN;
+
+	IF NOT rtIN_close THEN
+		rtIN_close			:=	TRUE;		
+		statusTrackerTime	:=	REAL_TO_TIME(F_Scaling(Variable_In:= _status, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= TIME_TO_REAL(_ClosingTime)));			
+	END_IF
+
+	tonStatusTracker_close(IN:= close_op, PT:= _closingTime, Q=> , ET=> );
+	IF tonStatusTracker_close.IN THEN
+		IF statusTrackerTime >= tonStatusTracker_close.ET THEN
+			_status	:=	LIMIT( 0, (F_Scaling(Variable_In:= TIME_TO_REAL(statusTrackerTime - tonStatusTracker_close.ET), Input_min:= 0, Input_max:= TIME_TO_REAL(_closingTime), Output_min:= 0, Output_max:= 100)) , 100);
+		ELSE
+			_status	:=	0;	
+		END_IF			
+	END_IF
+	
+END_IF
+
+IF CloseSensor THEN
+	Close_op	:=	FALSE;
+	
+	IF M_CalibrationAttempt_close AND (NOT OpenSensor) THEN
+		M_CalibrationAttempt_close	:=	FALSE;
+		_ClosingTime			:=	toncloseTimeMeasurement.ET;
+		toncloseTimeMeasurement(IN:= FALSE, PT:= T#1D, Q=> , ET=> );
+		_status					:=	0;
+	END_IF
+END_IF
+
+IF (IN = FALSE) THEN
+	M_CalibrationAttempt_close	:=	FALSE;
+	toncloseTimeMeasurement(IN:= FALSE, PT:= T#1D, Q=> , ET=> );
+	tonStatusTracker_close(IN:= FALSE, PT:= , Q=> , ET=> );
+	rtIN_close	:=	FALSE;	
+END_IF
+	
+toncloseTimeMeasurement();
+tonStatusTracker_close();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open" Id="{611fa041-c933-4221-b71b-b0e5334120fb}">
+      <Declaration><![CDATA[METHOD Open : BOOL
+VAR_INPUT
+	IN: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+//	Status - Travel time Calibration (Open Time)
+IF CloseSensor AND IN THEN
+	M_CalibrationAttempt_open	:=	TRUE;
+	tonOpenTimeMeasurement(IN:= FALSE, PT:= T#1D, Q=> , ET=> );
+END_IF
+IF M_CalibrationAttempt_open AND (NOT CloseSensor) THEN
+	tonOpenTimeMeasurement(IN:= TRUE, PT:= T#1D, Q=> , ET=> );
+END_IF
+
+
+IF NOT Close_op THEN
+	Open_op	:=	IN;
+	
+	IF NOT rtIN_open THEN
+		rtIN_open			:=	TRUE;
+		statusTrackerTime	:=	REAL_TO_TIME(F_Scaling(Variable_In:= _status, Input_min:= 0, Input_max:= 100, Output_min:= 0, Output_max:= TIME_TO_REAL(_OpeningTime)));			
+	END_IF
+
+	tonStatusTracker_open(IN:= Open_op, PT:= _OpeningTime, Q=> , ET=> );
+	IF tonStatusTracker_open.IN THEN
+		IF (tonStatusTracker_open.ET <= _OpeningTime) THEN
+			_status	:=	LIMIT( 0, F_Scaling(Variable_In:= TIME_TO_REAL(statusTrackerTime + tonStatusTracker_open.ET), Input_min:= 0, Input_max:= TIME_TO_REAL(_OpeningTime), Output_min:= 0, Output_max:= 100), 100);
+		ELSE
+			_status	:=	100;	
+		END_IF			
+	END_IF
+		
+END_IF
+
+IF OpenSensor THEN
+	Open_op	:=	FALSE;
+	
+	IF M_CalibrationAttempt_open AND (NOT CloseSensor) THEN
+		M_CalibrationAttempt_open	:=	FALSE;
+		_OpeningTime			:=	tonOpenTimeMeasurement.ET;
+		tonOpenTimeMeasurement(IN:= FALSE, PT:= T#1D, Q=> , ET=> );
+		_status					:=	100;
+	END_IF
+END_IF
+
+IF (IN = FALSE) THEN
+	M_CalibrationAttempt_open	:=	FALSE;
+	tonOpenTimeMeasurement(IN:= FALSE, PT:= T#1D, Q=> , ET=> );
+	tonStatusTracker_open(IN:= FALSE, PT:= , Q=> , ET=> );
+	rtIN_open	:=	FALSE;
+END_IF
+	
+tonOpenTimeMeasurement();
+tonStatusTracker_open();
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Status" Id="{43526895-7814-462c-8028-3821f4aa44c0}">
+      <Declaration><![CDATA[PROPERTY Status : INT]]></Declaration>
+      <Get Name="Get" Id="{640bccd9-ad01-4a1c-a206-7522b59a5002}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Status	:=	REAL_TO_INT(_status);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="CurtainWithSensor">
+      <LineId Id="10" Count="7" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithSensor.Close">
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="61" Count="6" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="59" Count="1" />
+    </LineIds>
+    <LineIds Name="CurtainWithSensor.Open">
+      <LineId Id="72" Count="0" />
+      <LineId Id="46" Count="11" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="105" Count="2" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="58" Count="3" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="62" Count="3" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="92" Count="1" />
+      <LineId Id="67" Count="2" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CurtainWithSensor.Status.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

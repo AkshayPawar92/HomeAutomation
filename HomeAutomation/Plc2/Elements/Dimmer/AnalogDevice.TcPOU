@@ -131,8 +131,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-	_value	:=	F_Scaling(Variable_In:= value, ZeroIn:= _zeroIn, ZeroOut:= _zeroOut, SpanIn:= _spanIn, SpanOut:= _spanOut);
+        <ST><![CDATA[	_value	:=	F_Scaling(Variable_In:= value, Input_min:= _zeroIn, Input_max:= _zeroOut, Output_min:= _spanIn, Output_max:= _spanOut);
 
 	
 
@@ -147,7 +146,7 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[
-	Status	:=	REAL_TO_INT(F_Scaling(Variable_In:= _value, ZeroIn:= _spanIn, ZeroOut:= _spanOut, SpanIn:= _zeroIn, SpanOut:= _zeroOut));
+	Status	:=	REAL_TO_INT(F_Scaling(Variable_In:= _value, Input_min:= _spanIn, Input_max:= _spanOut, Output_min:= _zeroIn, Output_max:= _zeroOut));
 ]]></ST>
         </Implementation>
       </Get>
@@ -193,11 +192,7 @@ END_VAR
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="AnalogDevice.SetValue">
-      <LineId Id="6" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="26" Count="0" />
+      <LineId Id="44" Count="3" />
       <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="AnalogDevice.Status.Get">

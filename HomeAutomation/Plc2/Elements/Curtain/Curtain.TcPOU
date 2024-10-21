@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="Curtain" Id="{ca3ec28c-fda5-4d39-99fa-7f5db88fc28d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Curtain IMPLEMENTS I_Curtain
+VAR
+	Open_op AT%Q* : BOOL;
+	Close_op AT%Q* : BOOL;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Close" Id="{37ad8b5b-8ace-4bf9-b1ba-f44bda034d06}">
+      <Declaration><![CDATA[METHOD Close : BOOL
+VAR_INPUT
+	IN: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF NOT Open_op THEN
+	Close_op	:=	IN;
+END_IF
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open" Id="{ca8fbd4d-b476-43a1-a158-32c3d08cb5c1}">
+      <Declaration><![CDATA[METHOD Open : BOOL
+VAR_INPUT
+	IN: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF NOT Close_op THEN
+	Open_op		:=	IN;
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Curtain">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Curtain.Close">
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="Curtain.Open">
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

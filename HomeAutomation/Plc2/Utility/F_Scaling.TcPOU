@@ -3,22 +3,30 @@
   <POU Name="F_Scaling" Id="{b4f39728-83e7-4823-aac6-c98cad02cf6e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION F_Scaling : REAL
 VAR_INPUT
-	Variable_In: REAL;		//	raw value of analog card
-	ZeroIn: REAL;			//	min limit of analog card	
-	ZeroOut: REAL;			//	max limit of analog card
-	SpanIn: REAL;			//	Scalled min limit
-	SpanOut: REAL;			//	Scalled max limit
+	Variable_In: REAL;			//	raw value of analog card
+	Input_min: REAL;			//	min limit of analog card	
+	Input_max: REAL;			//	max limit of analog card
+	Output_min: REAL;			//	Scalled min limit
+	Output_max: REAL;			//	Scalled max limit
 END_VAR
 VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-	F_Scaling := (((SpanOut - SpanIn) / ZeroOut) * Variable_In) + SpanIn;
+IF (Input_max - Input_min) <> 0 THEN
+	F_Scaling := ((Variable_In - Input_min) / (Input_max - Input_min)) * (Output_max - Output_min) + Output_min;
+ELSE
+	F_Scaling	:=	0;
+END_IF
+
 
 (*
 The formula is:
 Out := ((Variable_In - ZeroIn) / (SpanIn - ZeroIn)) * (SpanOut - ZeroOut) + ZeroOut.
+
+from chatGPT:
+Scaled Value=[(Input Value−Input Min) / (Input Max−Input Min)]×(Output Max−Output Min)+Output Min
 
 Scaling:
 (0..100) y = (900..1000)
@@ -43,7 +51,15 @@ x = (((1000 - 900)/100 ) * y) + 900
 ]]></ST>
     </Implementation>
     <LineIds Name="F_Scaling">
-      <LineId Id="3" Count="26" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="3" Count="2" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="46" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="9" Count="20" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
